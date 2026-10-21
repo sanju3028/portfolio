@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sanjay Makala — Cyber Quest RPG Edition (Lvl 99 Builder)</title>
+  <meta name="description" content="Gamified retro RPG portfolio of Sanjay Makala. Inspect inventory artifacts, quest logs, and live code spells.">
+  
+  <!-- Retro Pixel Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="switcher.css">
+
+  <style>
+    :root {
+      --pixel-bg: #0d0f18;
+      --pixel-surface: #171b2b;
+      --pixel-surface-2: #21273d;
+      --pixel-border: #3b4566;
+      --pixel-green: #00ff66;
+      --pixel-cyan: #00e5ff;
+      --pixel-gold: #ffcc00;
+      --pixel-purple: #b537f2;
+      --pixel-red: #ff3366;
+      --pixel-text: #e2e8f0;
+      --font-pixel: 'Press Start 2P', monospace;
+      --font-vt: 'VT323', monospace;
+      --font-code: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      background-color: var(--pixel-bg);
+      color: var(--pixel-text);
+      font-family: var(--font-vt);
+      font-size: 20px;
+      line-height: 1.4;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(rgba(0, 229, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(13, 15, 24, 0.8), #0d0f18);
+      background-size: 24px 24px, 100% 100%;
+      image-rendering: pixelated;
+    }
+
+    /* CRT Scanline Overlay */
+    .crt-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 900;
+      opacity: 0.6;
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* Retro Pixel HUD */
+    .rpg-hud {
+      position: sticky;
+      top: 0.75rem;
+      z-index: 100;
+      background: var(--pixel-surface);
+      border: 4px solid var(--pixel-cyan);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.8);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .player-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .pixel-avatar {
+      width: 48px;
+      height: 48px;
+      border: 3px solid var(--pixel-gold);
+      border-radius: 4px;
+      image-rendering: pixelated;
+      object-fit: cover;
+    }
+    .player-meta h1 {
+      font-family: var(--font-pixel);
+      font-size: 0.9rem;
+      color: var(--pixel-gold);
+      text-shadow: 2px 2px #000;
+      margin-bottom: 0.25rem;
+    }
+    .player-title {
+      font-family: var(--font-code);
+      font-size: 0.75rem;
+      color: var(--pixel-cyan);
+    }
+
+    .stat-bars {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .bar-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+    }
+    .bar-track {
+      width: 110px;
+      height: 14px;
+      background: #000;
+      border: 2px solid #555;
+      padding: 1px;
+    }
+    .bar-fill {
+      height: 100%;
+    }
+    .bar-fill.hp { background: var(--pixel-green); width: 100%; animation: pulseHp 3s infinite; }
+    .bar-fill.mp { background: var(--pixel-cyan); width: 100%; }
+    .gold-stat {
+      font-family: var(--font-pixel);
+      font-size: 0.7rem;
+      color: var(--pixel-gold);
+      background: #000;
+      padding: 0.3rem 0.6rem;
+      border: 2px solid var(--pixel-gold);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* Hero Quest Banner */
+    .quest-hero {
+      background: var(--pixel-surface);
+      border: 4px solid var(--pixel-border);
+      padding: 2.5rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 8px 8px 0px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .quest-hero-badge {
+      position: absolute;
+      top: -12px;
+      left: 20px;
+      background: var(--pixel-red);
+      color: #fff;
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border: 2px solid #fff;
+    }
+    .quest-headline {
+      font-family: var(--font-pixel);
+      font-size: clamp(1.1rem, 2.8vw, 1.8rem);
+      line-height: 1.5;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      text-shadow: 3px 3px #000;
+    }
+    .quest-headline span {
+      color: var(--pixel-green);
+    }
+    .quest-story {
+      font-size: 1.45rem;
+      color: #cbd5e1;
+      max-width: 70ch;
+      margin-bottom: 1.75rem;
+    }
+
+    .quest-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .rpg-btn {
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      padding: 0.85rem 1.4rem;
+      background: var(--pixel-surface-2);
+      color: #fff;
+      border: 3px solid var(--pixel-border);
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 4px 4px 0px #000;
+      transition: all 0.1s;
+    }
+    .rpg-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px #000;
+      border-color: var(--pixel-cyan);
+      color: var(--pixel-cyan);
+    }
+    .rpg-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 2px 2px 0px #000;
+    }
+    .rpg-btn.primary {
+      background: var(--pixel-green);
+      color: #000;
+      border-color: #fff;
+    }
+    .rpg-btn.primary:hover {
+      background: #33ff88;
+      color: #000;
+    }
+
+    /* Interactive Mini Canvas: संजय Walker */
+    .mini-arena-box {
+      background: #000;
+      border: 4px solid var(--pixel-cyan);
+      margin-bottom: 3rem;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 6px 6px 0px rgba(0,0,0,0.8);
+    }
+    .arena-title {
+      font-family: var(--font-pixel);
+      font-size: 0.75rem;
+      color: var(--pixel-cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #game-canvas {
+      background: #080c14;
+      border: 2px dashed #334155;
+      max-width: 100%;
+      height: 180px;
+      display: block;
+      margin: 0 auto;
+      cursor: crosshair;
+    }
+    .arena-controls {
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+    }
+
+    /* Inventory Section (Shipped Products as Artifacts) */
+    .section-title-pixel {
+      font-family: var(--font-pixel);
+      font-size: 1.15rem;
+      color: var(--pixel-gold);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-shadow: 2px 2px #000;
+    }
+
+    .inventory-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+    @media (min-width: 768px) {
+      .inventory-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .item-card {
+      background: var(--pixel-surface);
+      border: 4px solid var(--pixel-border);
+      padding: 1.5rem;
+      box-shadow: 6px 6px 0px #000;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .item-card:hover {
+      border-color: var(--pixel-gold);
+      transform: translateY(-4px);
+      box-shadow: 8px 8px 0px rgba(255, 204, 0, 0.3);
+    }
+
+    .item-rarity {
+      font-family: var(--font-pixel);
+      font-size: 0.6rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 2px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+    .rarity-mythic { background: var(--pixel-red); color: #fff; }
+    .rarity-legendary { background: var(--pixel-gold); color: #000; }
+    .rarity-epic { background: var(--pixel-purple); color: #fff; }
+    .rarity-rare { background: var(--pixel-cyan); color: #000; }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .item-icon-box {
+      width: 48px;
+      height: 48px;
+      background: #000;
+      border: 2px solid var(--pixel-cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+    }
+    .item-name {
+      font-family: var(--font-pixel);
+      font-size: 0.9rem;
+      color: #fff;
+    }
+    .item-sub {
+      font-family: var(--font-code);
+      font-size: 0.8rem;
+      color: var(--pixel-cyan);
+    }
+
+    .item-stats {
+      background: #080a12;
+      border: 2px solid #232d4b;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      font-family: var(--font-code);
+      font-size: 0.85rem;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--pixel-green);
+      margin-bottom: 0.25rem;
+    }
+    .stat-row:last-child { margin-bottom: 0; }
+
+    .item-desc {
+      font-size: 1.25rem;
+      color: #cbd5e1;
+      margin-bottom: 1.25rem;
+      line-height: 1.35;
+    }
+
+    /* Quest Log: Defeated Bosses */
+    .quest-log-box {
+      background: var(--pixel-surface);
+      border: 4px solid var(--pixel-border);
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 6px 6px 0px #000;
+    }
+    .boss-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .boss-item {
+      background: var(--pixel-surface-2);
+      border: 2px solid #334155;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .boss-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .boss-status {
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      padding: 0.25rem 0.5rem;
+      background: #052e16;
+      border: 1px solid var(--pixel-green);
+      color: var(--pixel-green);
+    }
+
+    /* Retro Dialogue Modal */
+    .dialogue-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .dialogue-modal.open { display: flex; }
+    .dialogue-box {
+      background: #000;
+      border: 4px solid var(--pixel-gold);
+      max-width: 650px;
+      width: 100%;
+      padding: 2rem;
+      box-shadow: 0 0 30px rgba(255, 204, 0, 0.4);
+    }
+    .dialogue-speaker {
+      font-family: var(--font-pixel);
+      font-size: 0.85rem;
+      color: var(--pixel-gold);
+      margin-bottom: 1rem;
+    }
+    .dialogue-text {
+      font-size: 1.5rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      min-height: 80px;
+      line-height: 1.4;
+    }
+
+    /* Sound Synthesizer toggle */
+    .audio-btn-hud {
+      background: #000;
+      color: var(--pixel-green);
+      border: 2px solid var(--pixel-green);
+      font-family: var(--font-pixel);
+      font-size: 0.65rem;
+      padding: 0.4rem 0.7rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="crt-overlay"></div>
+
+  <div class="container">
+    
+    <!-- RPG Top Status HUD -->
+    <header class="rpg-hud">
+      <div class="player-profile">
+        <img src="./assets/avatar.jpg" alt="Sanjay Makala Character" class="pixel-avatar">
+        <div class="player-meta">
+          <h1>SANJAY MAKALA</h1>
+          <div class="player-title">LVL 99 CODE WARLOCK // FOUNDER</div>
+        </div>
+      </div>
+
+      <div class="stat-bars">
+        <div class="bar-group">
+          <span>HP</span>
+          <div class="bar-track"><div class="bar-fill hp"></div></div>
+          <span>100%</span>
+        </div>
+        <div class="bar-group">
+          <span>MP</span>
+          <div class="bar-track"><div class="bar-fill mp"></div></div>
+          <span>MAX</span>
+        </div>
+        <div class="gold-stat">
+          <span>🪙</span>
+          <span>ARR: $330K+</span>
+        </div>
+        <button id="retro-sound-btn" class="audio-btn-hud" title="Toggle 8-bit sound">SFX: ON</button>
+      </div>
+    </header>
+
+    <!-- Main Quest Hero Banner -->
+    <section class="quest-hero">
+      <span class="quest-hero-badge">MAIN QUEST ACTIVE</span>
+      <h2 class="quest-headline">
+        "I TURN RAW CODE INTO <span>LEGENDARY SAAS ARTIFACTS</span>."
+      </h2>
+      <p class="quest-story">
+        Greetings, traveler! I'm Sanjay Makala, a software engineer and indie founder. I wander the tech dungeon slaying leaked secrets, rescuing churned customers, and conjuring AI agents that work on the first try.
+      </p>
+
+      <div class="quest-actions">
+        <button class="rpg-btn primary" id="trigger-talk-btn">⚔️ Talk to Sanjay</button>
+        <a href="#inventory" class="rpg-btn">🎒 Open Inventory</a>
+        <a href="#bosses" class="rpg-btn">📜 Boss Logs</a>
+        <a href="mailto:sanjaymakala.dev@gmail.com" class="rpg-btn">✉️ Summon Owl (Email)</a>
+      </div>
+    </section>
+
+    <!-- Interactive Mini Game Canvas -->
+    <section class="mini-arena-box">
+      <div class="arena-title">
+        <span>INTERACTIVE ARCADE DUNGEON</span>
+        <span style="color: var(--pixel-gold)">[ COLLECT THE 4 PRODUCT COINS ]</span>
+      </div>
+      <canvas id="game-canvas" width="800" height="180"></canvas>
+      <div class="arena-controls">
+        Use <b>[ ARROW KEYS ]</b> or <b>[ A / D ]</b> or <b>[ CLICK / TAP ]</b> to move character and gather product powerups!
+      </div>
+    </section>
+
+    <!-- Section: Shipped Inventory (Products) -->
+    <section id="inventory">
+      <h3 class="section-title-pixel">
+        <span>🎒</span> ARTIFACT INVENTORY (SHIPPED PRODUCTS)
+      </h3>
+
+      <div class="inventory-grid">
+        
+        <!-- Artifact 1: LeakWatch -->
+        <article class="item-card">
+          <span class="item-rarity rarity-mythic">Mythic Artifact</span>
+          <div class="item-header">
+            <div class="item-icon-box">🛡️</div>
+            <div>
+              <h4 class="item-name">Shield of LeakWatch</h4>
+              <span class="item-sub">Automated GitHub Secret Detection</span>
+            </div>
+          </div>
+          <div class="item-stats">
+            <div class="stat-row"><span>+ Latency:</span> <span>&lt; 300ms Exploit Buffer</span></div>
+            <div class="stat-row"><span>+ Zero-Knowledge:</span> <span>Salted HMAC Hashing</span></div>
+            <div class="stat-row"><span>+ Alerts:</span> <span>Direct Slack & Email Webhooks</span></div>
+          </div>
+          <p class="item-desc">
+            Equipped with high-precision entropy scanners and pattern matchers. Intercepts git commit pushes across private repositories before intruders exploit credentials.
+          </p>
+          <a href="https://github.com" target="_blank" class="rpg-btn">Inspect Spell Code &rarr;</a>
+        </article>
+
+        <!-- Artifact 2: ExitNote -->
+        <article class="item-card">
+          <span class="item-rarity rarity-legendary">Legendary Relic</span>
+          <div class="item-header">
+            <div class="item-icon-box">📈</div>
+            <div>
+              <h4 class="item-name">ExitNote Retention Rune</h4>
+              <span class="item-sub">Micro-SaaS Churn Survey Widget</span>
+            </div>
+          </div>
+          <div class="item-stats">
+            <div class="stat-row"><span>+ Churn Recovery:</span> <span>+38.5% Customers Saved</span></div>
+            <div class="stat-row"><span>+ Encapsulation:</span> <span>12 KB Shadow DOM</span></div>
+            <div class="stat-row"><span>+ Setup Speed:</span> <span>Under 10 Minutes</span></div>
+          </div>
+          <p class="item-desc">
+            Triggers when SaaS subscribers click "Cancel". Gathers real departure reasons and casts dynamic save offers, recovering monthly recurring revenue.
+          </p>
+          <a href="https://github.com" target="_blank" class="rpg-btn">Cast Retention Rune &rarr;</a>
+        </article>
+
+        <!-- Artifact 3: LinkedIn Reply Assistant -->
+        <article class="item-card">
+          <span class="item-rarity rarity-epic">Epic Gauntlet</span>
+          <div class="item-header">
+            <div class="item-icon-box">⚡</div>
+            <div>
+              <h4 class="item-name">Gauntlet of Signal Reply</h4>
+              <span class="item-sub">Autonomous AI LinkedIn Copilot</span>
+            </div>
+          </div>
+          <div class="item-stats">
+            <div class="stat-row"><span>+ Engine:</span> <span>Claude 3.5 & GPT-4o</span></div>
+            <div class="stat-row"><span>+ Tonal Modes:</span> <span>Insightful / Friendly / Casual</span></div>
+            <div class="stat-row"><span>+ Fluff Resistance:</span> <span>100% Anti-Robotic</span></div>
+          </div>
+          <p class="item-desc">
+            A Manifest V3 browser extension that scans the active conversation context in the DOM and crafts intelligent, authentic networking replies in one tap.
+          </p>
+          <a href="https://github.com" target="_blank" class="rpg-btn">Equip Gauntlet &rarr;</a>
+        </article>
+
+        <!-- Artifact 4: FormulaEngine -->
+        <article class="item-card">
+          <span class="item-rarity rarity-rare">Rare Tome</span>
+          <div class="item-header">
+            <div class="item-icon-box">📐</div>
+            <div>
+              <h4 class="item-name">FormulaEngine Scroll</h4>
+              <span class="item-sub">High-Speed KaTeX Math Compiler</span>
+            </div>
+          </div>
+          <div class="item-stats">
+            <div class="stat-row"><span>+ Render Engine:</span> <span>Vector KaTeX + Puppeteer</span></div>
+            <div class="stat-row"><span>+ Users:</span> <span>1,000+ STEM Students</span></div>
+            <div class="stat-row"><span>+ Precision:</span> <span>Infinite Vector Print DPI</span></div>
+          </div>
+          <p class="item-desc">
+            Automates the typesetting and generation of multi-column engineering cheatsheets and study guides with mathematical perfection.
+          </p>
+          <a href="https://github.com" target="_blank" class="rpg-btn">Read Ancient Scroll &rarr;</a>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Section: Defeated Bosses (Quest Log) -->
+    <section id="bosses" class="quest-log-box">
+      <h3 class="section-title-pixel">
+        <span>📜</span> QUEST LOG: DEFEATED MONSTERS
+      </h3>
+      <ul class="boss-list">
+        <li class="boss-item">
+          <div class="boss-info">
+            <span style="font-size: 1.5rem">👾</span>
+            <div>
+              <strong style="color: #fff">The Token Leaker [Boss Level 85]</strong>
+              <div style="font-size: 1.1rem; color: #94a3b8">Attempted to commit raw AWS secrets into a public repository.</div>
+            </div>
+          </div>
+          <span class="boss-status">✓ SLAIN BY LEAKWATCH</span>
+        </li>
+        <li class="boss-item">
+          <div class="boss-info">
+            <span style="font-size: 1.5rem">🐲</span>
+            <div>
+              <strong style="color: #fff">The Churn Drake [Boss Level 92]</strong>
+              <div style="font-size: 1.1rem; color: #94a3b8">Drained monthly subscription revenue without giving feedback.</div>
+            </div>
+          </div>
+          <span class="boss-status">✓ TAMED BY EXITNOTE</span>
+        </li>
+        <li class="boss-item">
+          <div class="boss-info">
+            <span style="font-size: 1.5rem">🧟</span>
+            <div>
+              <strong style="color: #fff">The AI Fluff Ghoul [Boss Level 78]</strong>
+              <div style="font-size: 1.1rem; color: #94a3b8">Spammed corporate LinkedIn feeds with robotic comments.</div>
+            </div>
+          </div>
+          <span class="boss-status">✓ PURGED BY REPLY ASSISTANT</span>
+        </li>
+      </ul>
+    </section>
+
+  </div>
+
+  <!-- Interactive Dialogue Modal -->
+  <div class="dialogue-modal" id="dialogue-modal">
+    <div class="dialogue-box">
+      <div class="dialogue-speaker">▶ SANJAY MAKALA SAYS:</div>
+      <div class="dialogue-text" id="dialogue-text">...</div>
+      <button class="rpg-btn primary" id="dialogue-close-btn">[ CONTINUE QUEST ]</button>
+    </div>
+  </div>
+
+  <script src="switcher.js"></script>
+  <script>
+    // 8-bit Sound Synthesizer via Web Audio API
+    let sfxOn = true;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+
+    function playBeep(freq, type = 'square', duration = 0.08) {
+      if (!sfxOn) return;
+      try {
+        if (!actx) actx = new AudioCtx();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, actx.currentTime);
+        gain.gain.setValueAtTime(0.08, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    document.getElementById('retro-sound-btn').addEventListener('click', (e) => {
+      sfxOn = !sfxOn;
+      e.target.textContent = `SFX: ${sfxOn ? 'ON' : 'OFF'}`;
+      if (sfxOn) playBeep(600, 'triangle');
+    });
+
+    // Dialogue script
+    const quotes = [
+      "Welcome, hero! I don't just write code, I craft living software that defends repositories and recovers lost revenue.",
+      "LeakWatch scans GitHub pushes in under 300 milliseconds. No raw secrets are stored, only HMAC hashes!",
+      "ExitNote has saved up to 38.5% churn for SaaS founders. Always ask why users cancel, and offer a win-win rescue!",
+      "Have an unreasonable idea? Give me a blank repo and a weekend, and let's conquer production together!"
+    ];
+
+    const dialogueModal = document.getElementById('dialogue-modal');
+    const dialogueText = document.getElementById('dialogue-text');
+    const talkBtn = document.getElementById('trigger-talk-btn');
+    const closeDlgBtn = document.getElementById('dialogue-close-btn');
+
+    talkBtn.addEventListener('click', () => {
+      const q = quotes[Math.floor(Math.random() * quotes.length)];
+      dialogueText.textContent = '';
+      dialogueModal.classList.add('open');
+      playBeep(440);
+
+      // Typing effect
+      let idx = 0;
+      const timer = setInterval(() => {
+        if (idx < q.length) {
+          dialogueText.textContent += q[idx];
+          if (idx % 3 === 0) playBeep(300 + (idx % 5) * 50, 'square', 0.03);
+          idx++;
+        } else {
+          clearInterval(timer);
+        }
+      }, 25);
+    });
+
+    closeDlgBtn.addEventListener('click', () => {
+      dialogueModal.classList.remove('open');
+      playBeep(880, 'sine', 0.05);
+    });
+
+    // Mini Arena Game Logic
+    const cvs = document.getElementById('game-canvas');
+    const c = cvs.getContext('2d');
+    let playerX = 50;
+    const playerY = 120;
+    let coins = [
+      { x: 220, y: 120, label: '🛡️ LeakWatch', collected: false },
+      { x: 400, y: 120, label: '📈 ExitNote', collected: false },
+      { x: 580, y: 120, label: '⚡ LinkedIn AI', collected: false },
+      { x: 740, y: 120, label: '📐 Formula', collected: false }
+    ];
+
+    function drawGame() {
+      c.fillStyle = '#0a0e1a';
+      c.fillRect(0, 0, cvs.width, cvs.height);
+
+      // Grid floor
+      c.strokeStyle = '#1e293b';
+      c.lineWidth = 1;
+      for (let x = 0; x < cvs.width; x += 40) {
+        c.beginPath();
+        c.moveTo(x, 150);
+        c.lineTo(x, 180);
+        c.stroke();
+      }
+      c.beginPath();
+      c.moveTo(0, 150);
+      c.lineTo(cvs.width, 150);
+      c.strokeStyle = '#00e5ff';
+      c.lineWidth = 2;
+      c.stroke();
+
+      // Draw coins
+      coins.forEach(coin => {
+        if (!coin.collected) {
+          c.fillStyle = '#ffcc00';
+          c.beginPath();
+          c.arc(coin.x, coin.y, 14, 0, Math.PI * 2);
+          c.fill();
+          c.fillStyle = '#000';
+          c.font = '10px monospace';
+          c.fillText('🪙', coin.x - 7, coin.y + 4);
+          c.fillStyle = '#cbd5e1';
+          c.font = '11px monospace';
+          c.fillText(coin.label, coin.x - 30, coin.y - 20);
+        }
+      });
+
+      // Draw player sprite (Pixel Avatar box)
+      c.fillStyle = '#00ff66';
+      c.fillRect(playerX - 12, playerY - 24, 24, 24);
+      c.fillStyle = '#000';
+      c.fillRect(playerX - 6, playerY - 18, 4, 4); // eyes
+      c.fillRect(playerX + 2, playerY - 18, 4, 4);
+      c.fillStyle = '#ffcc00';
+      c.fillRect(playerX - 10, playerY - 28, 20, 6); // warlock hat
+
+      c.fillStyle = '#fff';
+      c.font = '10px monospace';
+      c.fillText('SANJAY', playerX - 18, playerY - 34);
+
+      // Check pickup
+      coins.forEach(coin => {
+        if (!coin.collected && Math.abs(playerX - coin.x) < 25) {
+          coin.collected = true;
+          playBeep(987, 'sine', 0.15);
+        }
+      });
+
+      requestAnimationFrame(drawGame);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'd') {
+        playerX = Math.min(cvs.width - 20, playerX + 18);
+        playBeep(220, 'triangle', 0.02);
+      } else if (e.key === 'ArrowLeft' || e.key === 'a') {
+        playerX = Math.max(20, playerX - 18);
+        playBeep(220, 'triangle', 0.02);
+      }
+    });
+
+    cvs.addEventListener('click', (e) => {
+      const rect = cvs.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      playerX = Math.max(20, Math.min(cvs.width - 20, clickX));
+      playBeep(330, 'triangle', 0.03);
+    });
+
+    drawGame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+/* ==========================================================================
+   PORTFOLIO DESIGN SWITCHER DOCK
+   Floats on all variants to allow instant 1-click comparison
+   ========================================================================== */
+
+.design-switcher-dock {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  background: rgba(10, 14, 23, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  padding: 0.4rem 0.6rem;
+  border-radius: 9999px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: 96vw;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', monospace;
+  animation: switcherSlideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes switcherSlideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.switcher-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  padding: 0 0.5rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+  display: none;
+}
+@media (min-width: 768px) {
+  .switcher-label {
+    display: inline-block;
+  }
+}
+
+.switcher-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.switcher-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.switcher-pill:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.switcher-pill.active {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  color: #080a10;
+  border-color: #00f2fe;
+  font-weight: 700;
+  box-shadow: 0 2px 12px rgba(0, 242, 254, 0.4);
+}
+
+.switcher-pill .pill-emoji {
+  font-size: 0.85rem;
+}
+
+.switcher-hub-btn {
+  background: rgba(255, 255, 255, 0.12);
+  color: #00f2fe;
+  border-color: rgba(0, 242, 254, 0.4);
+}
+.switcher-hub-btn:hover {
+  background: #00f2fe;
+  color: #080a10;
+}

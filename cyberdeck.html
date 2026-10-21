@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sanjay Makala — CyberDeck OS v4.2 [Netrunner DevSecOps]</title>
+  <meta name="description" content="Cyberpunk Netrunner workstation and DevSecOps terminal portfolio for Sanjay Makala. Test live secret scanning, inspect node clusters, and execute system commands.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="switcher.css">
+
+  <style>
+    :root {
+      --cyber-bg: #04080a;
+      --cyber-panel: #0a1118;
+      --cyber-panel-header: #101c26;
+      --cyber-green: #00ff66;
+      --cyber-green-glow: rgba(0, 255, 102, 0.25);
+      --cyber-amber: #ffaa00;
+      --cyber-cyan: #00e5ff;
+      --cyber-red: #ff3344;
+      --cyber-border: #1a3242;
+      --font-deck: 'Share Tech Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--cyber-bg);
+      color: var(--cyber-green);
+      font-family: var(--font-deck);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 1rem;
+      position: relative;
+    }
+
+    /* CRT Scanlines & Screen Curve Effect */
+    body::before {
+      content: " ";
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.35) 50%);
+      background-size: 100% 3px;
+      z-index: 999;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .deck-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding-bottom: 5rem;
+    }
+
+    /* Deck Master Header */
+    .deck-header {
+      border: 1px solid var(--cyber-green);
+      background: var(--cyber-panel);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 0 15px var(--cyber-green-glow);
+    }
+
+    .deck-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #fff;
+    }
+    .deck-brand span { color: var(--cyber-green); }
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--cyber-green);
+      box-shadow: 0 0 8px var(--cyber-green);
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.2; } }
+
+    .deck-metrics-bar {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--cyber-amber);
+    }
+
+    .deck-btn {
+      background: transparent;
+      border: 1px solid var(--cyber-green);
+      color: var(--cyber-green);
+      font-family: var(--font-deck);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.85rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .deck-btn:hover {
+      background: var(--cyber-green);
+      color: #000;
+      box-shadow: 0 0 10px var(--cyber-green);
+    }
+
+    /* Cyber Window Grid */
+    .deck-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (min-width: 900px) {
+      .deck-grid {
+        grid-template-columns: 1.1fr 0.9fr;
+      }
+    }
+
+    .deck-window {
+      background: var(--cyber-panel);
+      border: 1px solid var(--cyber-border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+    }
+    .deck-window:hover {
+      border-color: var(--cyber-green);
+    }
+
+    .window-header {
+      background: var(--cyber-panel-header);
+      border-bottom: 1px solid var(--cyber-border);
+      padding: 0.5rem 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+    .window-controls span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border: 1px solid #475569;
+      margin-left: 4px;
+    }
+
+    .window-body {
+      padding: 1.25rem;
+      flex-grow: 1;
+    }
+
+    /* Identity Dossier */
+    .dossier-intro {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px dashed var(--cyber-border);
+    }
+    .dossier-avatar {
+      width: 80px;
+      height: 80px;
+      border: 2px solid var(--cyber-green);
+      filter: grayscale(80%) sepia(20%) hue-rotate(90deg);
+      object-fit: cover;
+    }
+    .dossier-text h1 {
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+    .dossier-role {
+      color: var(--cyber-amber);
+      font-size: 0.85rem;
+    }
+
+    .dossier-body p {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .highlight-cyber {
+      color: var(--cyber-green);
+      font-weight: bold;
+    }
+
+    /* Live Secret Scanner Simulator (LeakWatch Sandbox) */
+    .scanner-box {
+      background: #05090d;
+      border: 1px solid var(--cyber-border);
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .scanner-title {
+      font-size: 0.85rem;
+      color: var(--cyber-cyan);
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .scanner-input {
+      width: 100%;
+      background: #000;
+      border: 1px solid #334155;
+      color: var(--cyber-green);
+      font-family: var(--font-deck);
+      font-size: 0.85rem;
+      padding: 0.6rem;
+      outline: none;
+      margin-bottom: 0.5rem;
+    }
+    .scanner-input:focus { border-color: var(--cyber-green); }
+    .scanner-result {
+      background: #000;
+      border: 1px dashed #334155;
+      padding: 0.6rem;
+      font-size: 0.8rem;
+      min-height: 50px;
+      color: #94a3b8;
+    }
+
+    /* Product Nodes Tabs */
+    .nodes-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .node-item {
+      background: #060b10;
+      border: 1px solid var(--cyber-border);
+      padding: 1rem;
+      transition: all 0.2s;
+    }
+    .node-item:hover {
+      border-color: var(--cyber-cyan);
+      box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+    .node-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    .node-title {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 700;
+    }
+    .node-status {
+      font-size: 0.75rem;
+      color: var(--cyber-green);
+      border: 1px solid var(--cyber-green);
+      padding: 0.15rem 0.4rem;
+    }
+    .node-desc {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .node-telemetry {
+      font-size: 0.75rem;
+      color: var(--cyber-amber);
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* Live Hex Stream Box */
+    .hex-box {
+      font-size: 0.75rem;
+      color: #38bdf8;
+      background: #000;
+      border: 1px solid var(--cyber-border);
+      padding: 0.6rem;
+      height: 120px;
+      overflow: hidden;
+      line-height: 1.4;
+      font-family: var(--font-deck);
+    }
+
+    /* Audio Equalizer Visualizer */
+    .eq-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 40px;
+      padding: 4px;
+      background: #000;
+      border: 1px solid var(--cyber-border);
+      margin-top: 1rem;
+    }
+    .eq-bar {
+      flex: 1;
+      background: var(--cyber-green);
+      height: 30%;
+      animation: eqBounce 1.2s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.1s; }
+    .eq-bar:nth-child(5) { animation-delay: 0.5s; }
+    .eq-bar:nth-child(6) { animation-delay: 0.3s; }
+    .eq-bar:nth-child(7) { animation-delay: 0.6s; }
+    .eq-bar:nth-child(8) { animation-delay: 0.2s; }
+    @keyframes eqBounce {
+      to { height: 95%; background: var(--cyber-amber); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    
+    <!-- CyberDeck Master Bar -->
+    <header class="deck-header">
+      <div class="deck-brand">
+        <span class="status-indicator"></span>
+        <span>MAKALA-OS // KERNEL 4.2.0</span>
+      </div>
+
+      <div class="deck-metrics-bar">
+        <span>SECURITY LEVEL: <b>MAX_HMAC</b></span>
+        <span>LATENCY: <b>&lt; 280ms</b></span>
+        <span>ACTIVE NODES: <b>4 RUNNING</b></span>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem">
+        <button id="synth-sound-btn" class="deck-btn">AUDIO: ON</button>
+        <a href="mailto:sanjaymakala.dev@gmail.com" class="deck-btn">UPLINK EMAIL</a>
+      </div>
+    </header>
+
+    <div class="deck-grid">
+      
+      <!-- Window 1: Netrunner Identity Dossier -->
+      <section class="deck-window">
+        <div class="window-header">
+          <span>// DOSSIER: SANJAY_MAKALA.SYS</span>
+          <div class="window-controls"><span></span><span></span></div>
+        </div>
+        <div class="window-body">
+          <div class="dossier-intro">
+            <img src="./assets/avatar.jpg" alt="Sanjay Avatar Cyberdeck" class="dossier-avatar">
+            <div class="dossier-text">
+              <h1>SANJAY MAKALA</h1>
+              <div class="dossier-role">DEVSECOPS SPECIALIST & FULL-STACK ARCHITECT</div>
+            </div>
+          </div>
+
+          <div class="dossier-body">
+            <p>
+              I build software systems that survive in hostile production environments. From real-time cryptographic secret detection pipelines to micro-SaaS churn intelligence and autonomous LLM agents, I write code with <span class="highlight-cyber">zero bloat, zero plaintext persistence, and absolute performance</span>.
+            </p>
+          </div>
+
+          <!-- Live Secret Scanner Sandbox (LeakWatch Engine Simulator) -->
+          <div class="scanner-box">
+            <div class="scanner-title">
+              <span>🛡️ LEAKWATCH LIVE TEST SCANNER</span>
+              <span style="color: var(--cyber-green)">[STATUS: ACTIVE]</span>
+            </div>
+            <input type="text" id="live-scan-input" class="scanner-input" value="const AWS_SECRET = 'AKIAIOSFODNN7EXAMPLE';" placeholder="Paste a token string to test detection...">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem">
+              <button id="scan-now-btn" class="deck-btn" style="width: 100%">⚡ EXECUTE LEAKWATCH SCAN</button>
+            </div>
+            <div id="scan-output" class="scanner-result font-mono">
+              Ready. Click 'EXECUTE LEAKWATCH SCAN' to test real-time pattern and entropy evaluation.
+            </div>
+          </div>
+
+          <!-- Audio Equalizer -->
+          <div class="eq-container">
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Window 2: Production Nodes Cluster (Shipped Products) -->
+      <section class="deck-window">
+        <div class="window-header">
+          <span>// ACTIVE_PRODUCTION_NODES (4)</span>
+          <div class="window-controls"><span></span><span></span></div>
+        </div>
+        <div class="window-body">
+          <div class="nodes-grid">
+            
+            <!-- Node 1: LeakWatch -->
+            <div class="node-item">
+              <div class="node-head">
+                <span class="node-title">NODE_01: LeakWatch</span>
+                <span class="node-status">ONLINE: 200 OK</span>
+              </div>
+              <p class="node-desc">
+                Automated secret detection pipeline for GitHub commits. Evaluates diffs via entropy heuristics; alerts repo owners via private Slack/Email webhooks.
+              </p>
+              <div class="node-telemetry">
+                <span>PORT: 443</span>
+                <span>ENC: HMAC-SHA256</span>
+                <span>STACK: Next.js + Supabase</span>
+              </div>
+            </div>
+
+            <!-- Node 2: ExitNote -->
+            <div class="node-item">
+              <div class="node-head">
+                <span class="node-title">NODE_02: ExitNote</span>
+                <span class="node-status">ONLINE: 200 OK</span>
+              </div>
+              <p class="node-desc">
+                12 KB zero-dependency Shadow DOM cancellation survey widget. Calculates customer churn reasons and deploys instant retention discounts.
+              </p>
+              <div class="node-telemetry">
+                <span>RECOVERY: 38.5%</span>
+                <span>DOM: Isolated</span>
+                <span>STACK: TS + PostgreSQL</span>
+              </div>
+            </div>
+
+            <!-- Node 3: LinkedIn Copilot -->
+            <div class="node-item">
+              <div class="node-head">
+                <span class="node-title">NODE_03: LinkedIn AI Copilot</span>
+                <span class="node-status">ONLINE: 200 OK</span>
+              </div>
+              <p class="node-desc">
+                Contextual browser extension injecting Claude 3.5 Sonnet smart networking responses directly into live messaging feeds.
+              </p>
+              <div class="node-telemetry">
+                <span>ARCH: Manifest V3</span>
+                <span>MODES: 4 Tones</span>
+                <span>STACK: Chrome APIs</span>
+              </div>
+            </div>
+
+            <!-- Node 4: FormulaEngine -->
+            <div class="node-item">
+              <div class="node-head">
+                <span class="node-title">NODE_04: FormulaEngine</span>
+                <span class="node-status">ONLINE: 200 OK</span>
+              </div>
+              <p class="node-desc">
+                High-density LaTeX to vector PDF compiling pipeline for mathematics curricula. Serving 1,000+ university engineers.
+              </p>
+              <div class="node-telemetry">
+                <span>LATENCY: 1.2s PDF</span>
+                <span>USERS: 1,000+</span>
+                <span>STACK: KaTeX + Puppeteer</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Live Hex Stream Output -->
+          <div style="margin-top: 1rem">
+            <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem">// PACKET_STREAM_LOG:</div>
+            <div class="hex-box" id="hex-stream">
+              [0x7F4B] CONNECTED TO GITHUB APP GATEWAY...<br>
+              [0x7F4C] SCANNING REPOSITORY PUSH: ref/heads/master...<br>
+              [0x7F4D] 0 LEAKS DETECTED. HEALTH INDEX 99.9%...<br>
+              [0x7F4E] TELEMETRY STREAM NOMINAL...
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </div>
+
+  <script src="switcher.js"></script>
+  <script>
+    // CyberDeck Sound Engine
+    let soundOn = true;
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    let actx = null;
+
+    function playCyberBeep(freq, duration = 0.05) {
+      if (!soundOn) return;
+      try {
+        if (!actx) actx = new AudioCtx();
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(freq, actx.currentTime);
+        gain.gain.setValueAtTime(0.06, actx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(actx.destination);
+        osc.start();
+        osc.stop(actx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    document.getElementById('synth-sound-btn').addEventListener('click', (e) => {
+      soundOn = !soundOn;
+      e.target.textContent = `AUDIO: ${soundOn ? 'ON' : 'OFF'}`;
+      if (soundOn) playCyberBeep(520);
+    });
+
+    // Simulated Secret Scanner
+    const scanInput = document.getElementById('live-scan-input');
+    const scanBtn = document.getElementById('scan-now-btn');
+    const scanOutput = document.getElementById('scan-output');
+
+    scanBtn.addEventListener('click', () => {
+      const val = scanInput.value;
+      playCyberBeep(880, 0.08);
+      scanOutput.innerHTML = `<span style="color: var(--cyber-amber)">[RUNNING ENTROPY & REGEX ANALYSIS...]</span>`;
+
+      setTimeout(() => {
+        playCyberBeep(1200, 0.12);
+        const hasKey = /(AKIA[0-9A-Z]{16}|sk_live_[0-9a-zA-Z]{24}|ghp_[0-9a-zA-Z]{36}|AIza[0-9A-Za-z-_]{35})/i.test(val);
+        
+        if (hasKey || val.includes('SECRET') || val.includes('KEY')) {
+          scanOutput.innerHTML = `
+            <span style="color: var(--cyber-red); font-weight: bold;">[CRITICAL ALERT DETECTED]</span><br>
+            • Match Tag: HIGH_ENTROPY_CREDENTIAL<br>
+            • Masked Value: ********************${val.slice(-4)}<br>
+            • HMAC Fingerprint: 8f9b2c4e1a6... (Salted SHA-256)<br>
+            • Raw Secret: [PURGED FROM RAM]<br>
+            • Action: Private webhook dispatched to Slack & Email!
+          `;
+        } else {
+          scanOutput.innerHTML = `
+            <span style="color: var(--cyber-green)">[✓ CLEAN DIFF]</span><br>
+            • No sensitive tokens or high-entropy credentials matched.<br>
+            • Commit marked as safe.
+          `;
+        }
+      }, 450);
+    });
+
+    // Simulated Hex Stream Update
+    const hexStream = document.getElementById('hex-stream');
+    setInterval(() => {
+      const hex = '0x' + Math.floor(Math.random() * 0xFFFFFF).toString(16).toUpperCase();
+      const randMs = Math.floor(Math.random() * 80 + 120);
+      const newLine = `[${hex}] PUSH_VERIFIED // LATENCY: ${randMs}ms // HMAC_VALID`;
+      hexStream.innerHTML = hexStream.innerHTML.split('<br>').slice(-4).join('<br>') + '<br>' + newLine;
+    }, 2800);
+  </script>
+</body>
+</html>

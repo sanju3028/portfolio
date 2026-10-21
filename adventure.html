@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sanjay Makala — Deep Space Expedition & Starmap</title>
+  <meta name="description" content="Explore the cosmic product cartography of Sanjay Makala. Navigate sectors, engage warp drive, and inspect interstellar code bases.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="switcher.css">
+
+  <style>
+    :root {
+      --space-bg: #030712;
+      --space-card: rgba(15, 23, 42, 0.7);
+      --space-cyan: #38bdf8;
+      --space-cyan-glow: rgba(56, 189, 248, 0.35);
+      --space-amber: #fbbf24;
+      --space-purple: #c084fc;
+      --space-text: #f8fafc;
+      --space-muted: #94a3b8;
+      --space-hairline: rgba(56, 189, 248, 0.2);
+      --font-space: 'Orbitron', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--space-bg);
+      color: var(--space-text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    #space-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Holographic Navigation Header */
+    .starmap-hud {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.75rem;
+      background: var(--space-card);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--space-hairline);
+      border-radius: 9999px;
+      margin-top: 1rem;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .ship-id {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--font-space);
+      font-size: 0.9rem;
+      letter-spacing: 0.1em;
+    }
+    .ship-beacon {
+      width: 10px;
+      height: 10px;
+      background: var(--space-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--space-cyan);
+      animation: beaconBlink 1.5s infinite;
+    }
+    @keyframes beaconBlink {
+      50% { opacity: 0.3; transform: scale(0.8); }
+    }
+
+    .flight-telemetry {
+      display: flex;
+      gap: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--space-muted);
+    }
+    .telemetry-val {
+      color: var(--space-cyan);
+      font-weight: 700;
+    }
+
+    .warp-btn {
+      font-family: var(--font-space);
+      font-size: 0.75rem;
+      padding: 0.5rem 1.25rem;
+      border-radius: 9999px;
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(192, 132, 252, 0.3));
+      border: 1px solid var(--space-cyan);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 0 15px var(--space-cyan-glow);
+      transition: all 0.2s;
+    }
+    .warp-btn:hover {
+      background: var(--space-cyan);
+      color: #030712;
+      box-shadow: 0 0 25px var(--space-cyan);
+    }
+
+    /* Mission Control Hero */
+    .mission-hero {
+      text-align: center;
+      max-width: 820px;
+      margin: 3rem auto 4rem;
+    }
+
+    .expedition-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--space-amber);
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 0.35rem 0.9rem;
+      border-radius: 9999px;
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-title {
+      font-family: var(--font-space);
+      font-size: clamp(2rem, 4.8vw, 3.8rem);
+      font-weight: 900;
+      line-height: 1.12;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, var(--space-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .mission-log {
+      font-size: 1.2rem;
+      color: var(--space-muted);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Starmap Sector Search Bar */
+    .starmap-search-box {
+      max-width: 620px;
+      margin: 0 auto 3.5rem;
+      position: relative;
+    }
+    .search-input-hud {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--space-hairline);
+      border-radius: 9999px;
+      padding: 1rem 1.5rem 1rem 3.25rem;
+      color: #fff;
+      font-family: var(--font-space);
+      font-size: 0.95rem;
+      outline: none;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);
+      transition: all 0.3s;
+    }
+    .search-input-hud:focus {
+      border-color: var(--space-cyan);
+      box-shadow: 0 0 35px var(--space-cyan-glow);
+    }
+    .search-icon-hud {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--space-cyan);
+      font-size: 1.2rem;
+    }
+
+    /* Sector Cards (Planets / Systems) */
+    .sector-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin-bottom: 5rem;
+    }
+    @media (min-width: 768px) {
+      .sector-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .sector-card {
+      background: var(--space-card);
+      border: 1px solid var(--space-hairline);
+      border-radius: 20px;
+      padding: 2.25rem;
+      backdrop-filter: blur(16px);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .sector-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--space-cyan);
+      box-shadow: 0 10px 40px rgba(56, 189, 248, 0.25);
+    }
+
+    .sector-radar-ring {
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      border: 1px dashed var(--space-hairline);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: orbitSpin 20s linear infinite;
+    }
+    @keyframes orbitSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    .sector-coord {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--space-amber);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+    }
+    .sector-name {
+      font-family: var(--font-space);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .sector-type {
+      font-size: 0.9rem;
+      color: var(--space-cyan);
+      margin-bottom: 1.25rem;
+    }
+    .sector-desc {
+      font-size: 1rem;
+      color: var(--space-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .sector-telemetry-strip {
+      background: rgba(3, 7, 18, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .sector-action-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .scan-btn {
+      font-family: var(--font-space);
+      font-size: 0.8rem;
+      background: transparent;
+      border: 1px solid var(--space-cyan);
+      color: var(--space-cyan);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .scan-btn:hover {
+      background: var(--space-cyan);
+      color: #030712;
+    }
+
+    /* Hologram Scanner Modal */
+    .holo-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(3, 7, 18, 0.88);
+      backdrop-filter: blur(12px);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .holo-modal.open { display: flex; }
+    .holo-card {
+      background: #0b1120;
+      border: 2px solid var(--space-cyan);
+      box-shadow: 0 0 50px var(--space-cyan-glow);
+      max-width: 620px;
+      width: 100%;
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+    }
+    .holo-title {
+      font-family: var(--font-space);
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .holo-body {
+      font-size: 1rem;
+      color: #cbd5e1;
+      line-height: 1.7;
+      margin-bottom: 1.75rem;
+    }
+    .holo-close-btn {
+      font-family: var(--font-space);
+      background: var(--space-cyan);
+      color: #030712;
+      border: none;
+      padding: 0.6rem 1.25rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Dynamic Starfield Canvas -->
+  <canvas id="space-canvas"></canvas>
+
+  <div class="container">
+    
+    <!-- Top Telemetry Navigation HUD -->
+    <header class="starmap-hud">
+      <div class="ship-id">
+        <span class="ship-beacon"></span>
+        <span>MAKALA-1 // EXPLORER CLASS</span>
+      </div>
+
+      <div class="flight-telemetry">
+        <span>SECTORS: <b class="telemetry-val">4 ACTIVE</b></span>
+        <span>VELOCITY: <b class="telemetry-val" id="vel-val">0.34c</b></span>
+        <span>COORDINATES: <b class="telemetry-val">12.97°N, 77.59°E</b></span>
+      </div>
+
+      <button id="hyperdrive-btn" class="warp-btn">⚡ ENGAGE HYPERDRIVE</button>
+    </header>
+
+    <!-- Mission Hero Statement -->
+    <section class="mission-hero">
+      <div class="expedition-pill">
+        <span>🛰️</span> DEEP SPACE EXPEDITION: SANJAY MAKALA
+      </div>
+      <h1 class="mission-title">
+        MAPPING UNCHARTED TERRITORIES IN AI & SAAS
+      </h1>
+      <p class="mission-log">
+        I am a software engineer and product builder charting the frontiers of automated secret detection, autonomous AI copilots, and resilient indie infrastructure. Navigate the star sectors below to inspect telemetry.
+      </p>
+
+      <!-- Sector Search Input Bar -->
+      <div class="starmap-search-box">
+        <span class="search-icon-hud">🔍</span>
+        <input type="text" id="sector-search" class="search-input-hud" placeholder="Scan sectors (e.g. 'security', 'saas', 'ai', 'math')...">
+      </div>
+    </section>
+
+    <!-- Star Sectors (Products as Orbital Outposts) -->
+    <div class="sector-grid" id="sector-list">
+      
+      <!-- Sector 1: LeakWatch Fortress -->
+      <article class="sector-card" data-tags="security saas github secret scanner">
+        <div class="sector-radar-ring"></div>
+        <div class="sector-coord">SECTOR 01 // ORBITAL FORTRESS [ALPHA]</div>
+        <h2 class="sector-name">LeakWatch Defense Relay</h2>
+        <div class="sector-type">Automated Secret Detection & Key Shield</div>
+        <p class="sector-desc">
+          Continuous passive webhook radar scanning incoming commits to private GitHub outposts. Discovers leaked AWS, OpenAI, and Stripe tokens in sub-300ms without retaining raw keys.
+        </p>
+        <div class="sector-telemetry-strip">
+          <span>LATENCY: &lt;300ms</span>
+          <span>STORAGE: HMAC ONLY</span>
+          <span>CHANNELS: SLACK + EMAIL</span>
+        </div>
+        <div class="sector-action-row">
+          <button class="scan-btn" data-sector="leakwatch">📡 Scan Sector Telemetry</button>
+          <a href="https://github.com" target="_blank" style="color: var(--space-cyan); font-family: var(--font-mono); font-size: 0.8rem">Inspect Codebase &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Sector 2: ExitNote Colony -->
+      <article class="sector-card" data-tags="saas churn retention widget survey">
+        <div class="sector-radar-ring"></div>
+        <div class="sector-coord">SECTOR 02 // REVENUE RECOVERY HABITAT [BETA]</div>
+        <h2 class="sector-name">ExitNote Retention Colony</h2>
+        <div class="sector-type">SaaS Cancellation Intelligence & Retention</div>
+        <p class="sector-desc">
+          Intercepts subscription abandonment trajectories. Deploys an encapsulated 12 KB Shadow DOM survey module that dynamically offers personalized retention offers, recovering up to 38.5% MRR.
+        </p>
+        <div class="sector-telemetry-strip">
+          <span>PAYLOAD: 12 KB</span>
+          <span>SAVE RATE: +38.5%</span>
+          <span>INTEGRATION: &lt;10 MIN</span>
+        </div>
+        <div class="sector-action-row">
+          <button class="scan-btn" data-sector="exitnote">📡 Scan Sector Telemetry</button>
+          <a href="https://github.com" target="_blank" style="color: var(--space-cyan); font-family: var(--font-mono); font-size: 0.8rem">Inspect Codebase &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Sector 3: LinkedIn AI Relay -->
+      <article class="sector-card" data-tags="ai agent chrome extension linkedin copilot">
+        <div class="sector-radar-ring"></div>
+        <div class="sector-coord">SECTOR 03 // NEURAL UPLINK [GAMMA]</div>
+        <h2 class="sector-name">LinkedIn AI Signal Transceiver</h2>
+        <div class="sector-type">Contextual Engagement Copilot (Manifest V3)</div>
+        <p class="sector-desc">
+          Autonomous in-DOM networking assistant that deciphers professional conversation nuance. Powered by Claude 3.5 Sonnet to formulate contextual, high-signal responses with zero robotic fluff.
+        </p>
+        <div class="sector-telemetry-strip">
+          <span>API: CLAUDE 3.5</span>
+          <span>ARCH: MV3 WORKER</span>
+          <span>TONES: 4 MODES</span>
+        </div>
+        <div class="sector-action-row">
+          <button class="scan-btn" data-sector="linkedin">📡 Scan Sector Telemetry</button>
+          <a href="https://github.com" target="_blank" style="color: var(--space-cyan); font-family: var(--font-mono); font-size: 0.8rem">Inspect Codebase &rarr;</a>
+        </div>
+      </article>
+
+      <!-- Sector 4: FormulaEngine Singularity -->
+      <article class="sector-card" data-tags="math tools katex compiler edtech pdf">
+        <div class="sector-radar-ring"></div>
+        <div class="sector-coord">SECTOR 04 // ALGORITHMIC SINGULARITY [DELTA]</div>
+        <h2 class="sector-name">FormulaEngine Core</h2>
+        <div class="sector-type">High-Precision Vector KaTeX Math Compiler</div>
+        <p class="sector-desc">
+          Compiles complex calculus, Laplace transforms, and engineering formulations into sub-second vector printable PDF cheat sheets, serving over 1,000 STEM scholars.
+        </p>
+        <div class="sector-telemetry-strip">
+          <span>PRECISION: INFINITE VECTOR</span>
+          <span>ENGINE: PUPPETEER</span>
+          <span>STUDENTS: 1,000+</span>
+        </div>
+        <div class="sector-action-row">
+          <button class="scan-btn" data-sector="formula">📡 Scan Sector Telemetry</button>
+          <a href="https://github.com" target="_blank" style="color: var(--space-cyan); font-family: var(--font-mono); font-size: 0.8rem">Inspect Codebase &rarr;</a>
+        </div>
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- Holographic Telemetry Modal -->
+  <div class="holo-modal" id="holo-modal">
+    <div class="holo-card">
+      <div id="holo-coord" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--space-amber); margin-bottom: 0.5rem">TELEMETRY UPLINK</div>
+      <h3 class="holo-title" id="holo-title">Sector Name</h3>
+      <div class="holo-body" id="holo-body">Loading sector data...</div>
+      <button class="holo-close-btn" id="holo-close-btn">[ CLOSE TRANSMISSION ]</button>
+    </div>
+  </div>
+
+  <script src="switcher.js"></script>
+  <script>
+    // Starfield Simulation Engine
+    const cvs = document.getElementById('space-canvas');
+    const ctx = cvs.getContext('2d');
+    let w = (cvs.width = window.innerWidth);
+    let h = (cvs.height = window.innerHeight);
+
+    let warpSpeed = false;
+    let baseSpeed = 0.8;
+    let currentSpeed = baseSpeed;
+
+    const stars = [];
+    const numStars = 450;
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: (Math.random() - 0.5) * w * 2,
+        y: (Math.random() - 0.5) * h * 2,
+        z: Math.random() * w,
+        size: Math.random() * 1.5 + 0.5
+      });
+    }
+
+    function renderStars() {
+      ctx.fillStyle = warpSpeed ? 'rgba(3, 7, 18, 0.25)' : 'rgba(3, 7, 18, 0.9)';
+      ctx.fillRect(0, 0, w, h);
+
+      const targetSpeed = warpSpeed ? 18 : baseSpeed;
+      currentSpeed += (targetSpeed - currentSpeed) * 0.08;
+
+      stars.forEach(s => {
+        s.z -= currentSpeed;
+        if (s.z <= 0) {
+          s.z = w;
+          s.x = (Math.random() - 0.5) * w * 2;
+          s.y = (Math.random() - 0.5) * h * 2;
+        }
+
+        const k = 250 / s.z;
+        const px = s.x * k + w / 2;
+        const py = s.y * k + h / 2;
+
+        if (px >= 0 && px <= w && py >= 0 && py <= h) {
+          const size = Math.max(0.6, (1 - s.z / w) * (warpSpeed ? 3 : 2));
+          ctx.beginPath();
+          if (warpSpeed) {
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + (px - w / 2) * 0.1, py + (py - h / 2) * 0.1);
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = size;
+            ctx.stroke();
+          } else {
+            ctx.arc(px, py, size, 0, Math.PI * 2);
+            ctx.fillStyle = Math.random() > 0.85 ? '#38bdf8' : '#ffffff';
+            ctx.fill();
+          }
+        }
+      });
+
+      requestAnimationFrame(renderStars);
+    }
+
+    window.addEventListener('resize', () => {
+      w = cvs.width = window.innerWidth;
+      h = cvs.height = window.innerHeight;
+    });
+
+    renderStars();
+
+    // Hyperdrive Toggle
+    const hyperdriveBtn = document.getElementById('hyperdrive-btn');
+    const velVal = document.getElementById('vel-val');
+
+    hyperdriveBtn.addEventListener('click', () => {
+      warpSpeed = !warpSpeed;
+      hyperdriveBtn.textContent = warpSpeed ? '🛑 DISENGAGE WARP' : '⚡ ENGAGE HYPERDRIVE';
+      velVal.textContent = warpSpeed ? '9.82c (WARP)' : '0.34c';
+    });
+
+    // Sector Search
+    const searchInput = document.getElementById('sector-search');
+    const sectorCards = document.querySelectorAll('.sector-card');
+
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      sectorCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const tags = card.getAttribute('data-tags') || '';
+        if (text.includes(q) || tags.includes(q)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    // Holographic Telemetry Data
+    const TELEMETRY_LOGS = {
+      leakwatch: {
+        coord: "ORBITAL FORTRESS // SEC-01 // ALPHA",
+        title: "LeakWatch Security Matrix",
+        body: "Threat Vector: Credential leakage in git commits. Architecture: Streamed unified git patch parsing using high-entropy formulas. Storage Policy: Zero raw secrets stored, encrypted salted HMAC tags only. Response: Automated alerts to Slack & Email in under 300 milliseconds."
+      },
+      exitnote: {
+        coord: "RETENTION COLONY // SEC-02 // BETA",
+        title: "ExitNote Churn Intelligence",
+        body: "Payload: 12 KB vanilla TypeScript Shadow DOM widget. Mission: Intercept SaaS cancellations, diagnose exact user departure reasons, and calculate optimal salvage discounts. Average 38.5% recovery rate across production subscribers."
+      },
+      linkedin: {
+        coord: "NEURAL RELAY // SEC-03 // GAMMA",
+        title: "LinkedIn AI Response Transceiver",
+        body: "Engine: Claude 3.5 Sonnet / GPT-4o. Mechanics: MutationObserver monitors active message feed and generates genuine, context-aware networking replies across 4 personality matrices."
+      },
+      formula: {
+        coord: "MATHEMATICAL CORE // SEC-04 // DELTA",
+        title: "FormulaEngine Compiling Singularity",
+        body: "Pipeline: LaTeX formulas translated to vector mathematical SVG nodes. Puppeteer pipeline renders multi-column print-optimized sheets for 1,000+ engineering university students."
+      }
+    };
+
+    const holoModal = document.getElementById('holo-modal');
+    const holoCoord = document.getElementById('holo-coord');
+    const holoTitle = document.getElementById('holo-title');
+    const holoBody = document.getElementById('holo-body');
+    const holoCloseBtn = document.getElementById('holo-close-btn');
+
+    document.querySelectorAll('.scan-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.getAttribute('data-sector');
+        const data = TELEMETRY_LOGS[key];
+        if (data) {
+          holoCoord.textContent = data.coord;
+          holoTitle.textContent = data.title;
+          holoBody.textContent = data.body;
+          holoModal.classList.add('open');
+        }
+      });
+    });
+
+    holoCloseBtn.addEventListener('click', () => {
+      holoModal.classList.remove('open');
+    });
+  </script>
+</body>
+</html>

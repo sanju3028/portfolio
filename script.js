@@ -539,7 +539,7 @@ Sanjay Makala:
     hire: `
 LET'S BUILD TOGETHER:
   Email:    sanjaymakala.dev@gmail.com
-  GitHub:   https://github.com
+  GitHub:   https://github.com/sanju3028
   Twitter:  https://x.com
   LinkedIn: https://linkedin.com
   Timezone: IST (UTC+5:30) • High availability for US/EU sync

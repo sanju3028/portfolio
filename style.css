@@ -22,12 +22,12 @@
 
   --hairline: #222734;
   --hairline-strong: #32394c;
-  --hairline-focus: #14b8a6;
+  --hairline-focus: #6366f1;
 
-  /* Solid Curated Colors — ZERO Gradients */
-  --accent-teal: #14b8a6;
-  --accent-teal-hover: #0d9488;
-  --accent-teal-subtle: rgba(20, 184, 166, 0.12);
+  /* Solid Curated Colors — ZERO Gradients (Electric Indigo Accent) */
+  --accent-teal: #6366f1;
+  --accent-teal-hover: #4f46e5;
+  --accent-teal-subtle: rgba(99, 102, 241, 0.15);
   --accent-emerald: #10b981;
   --accent-emerald-subtle: rgba(16, 185, 129, 0.12);
   --accent-amber: #f59e0b;
@@ -71,11 +71,11 @@
 
   --hairline: #e4e4e7;
   --hairline-strong: #d4d4d8;
-  --hairline-focus: #0d9488;
+  --hairline-focus: #4f46e5;
 
-  --accent-teal: #0d9488;
-  --accent-teal-hover: #0f766e;
-  --accent-teal-subtle: rgba(13, 148, 136, 0.1);
+  --accent-teal: #4f46e5;
+  --accent-teal-hover: #4338ca;
+  --accent-teal-subtle: rgba(79, 70, 229, 0.12);
   --accent-emerald: #059669;
   --accent-emerald-subtle: rgba(5, 150, 105, 0.1);
   --accent-amber: #d97706;
@@ -1370,8 +1370,8 @@ body {
 
 .map-node:hover .node-core,
 .map-node.active .node-core {
-  fill: #5eead4;
-  stroke: #14b8a6;
+  fill: #a5b4fc;
+  stroke: #6366f1;
   stroke-width: 2.5px;
 }
 

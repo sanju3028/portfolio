@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  
+  <title>Sanjay Makala — Full-Stack Engineer, AI Product Builder & Founder</title>
+  <meta name="description" content="Sanjay Makala is an engineer and product builder creating autonomous AI agents, security tools, and micro-SaaS: LeakWatch, ExitNote, and LinkedIn Reply Assistant.">
+  <meta name="keywords" content="Sanjay Makala, Sanjay Makala portfolio, software engineer, AI product builder, SaaS founder, LeakWatch, ExitNote, LinkedIn Reply Assistant, full-stack developer">
+  <meta name="author" content="Sanjay Makala">
+  
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content="Sanjay Makala — Full-Stack Engineer & AI Product Builder">
+  <meta property="og:description" content="I build software that solves real problems — from autonomous AI systems to security scanners and indie micro-SaaS.">
+  <meta property="og:url" content="https://sanjaymakala.dev">
+  <meta property="og:image" content="./assets/avatar.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Sanjay Makala — Software Engineer & Builder">
+  <meta name="twitter:description" content="I build software that makes it past the demo and into the hands of real users.">
+  <meta name="twitter:image" content="./assets/avatar.jpg">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2300f2fe'/><text x='50%' y='65%' font-family='sans-serif' font-weight='900' font-size='56' fill='%230a0d14' text-anchor='middle'>S</text></svg>">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Sanjay Makala",
+    "url": "https://sanjaymakala.dev",
+    "jobTitle": "Full-Stack Engineer & Product Builder",
+    "description": "Software engineer and founder building AI products, automated security tools, and micro-SaaS including LeakWatch, ExitNote, and LinkedIn Reply Assistant.",
+    "sameAs": [
+      "https://github.com/sanjaymakala",
+      "https://x.com/sanjaymakala",
+      "https://linkedin.com/in/sanjaymakala"
+    ],
+    "knowsAbout": [
+      "Full-Stack Development",
+      "AI Engineering",
+      "Next.js",
+      "TypeScript",
+      "Python",
+      "Security & Secret Detection",
+      "Micro-SaaS",
+      "Chrome Extensions"
+    ]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Background Interactive Mesh Canvas -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <!-- Sound & Quick Key Indicator (Floating / Accessibility) -->
+  <div class="quick-hud">
+    <button id="sound-toggle" class="hud-pill" aria-label="Toggle sound effects" title="Toggle audio feedback">
+      <span class="hud-icon sound-icon" aria-hidden="true">🔊</span>
+      <span class="hud-label">Audio: <b id="sound-status">ON</b></span>
+    </button>
+    <button id="cmd-k-trigger" class="hud-pill cmd-hint" aria-label="Open Command Palette" title="Press Ctrl+K or Cmd+K">
+      <span class="kbd">⌘K</span>
+      <span class="hud-label">Search</span>
+    </button>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="site-header" id="header">
+    <div class="nav-container">
+      <a href="#hero" class="brand-link" id="brand-logo" aria-label="Sanjay Makala Home">
+        <div class="avatar-ring">
+          <img src="./assets/avatar.jpg" alt="Sanjay Makala" class="nav-avatar" width="36" height="36">
+          <span class="status-pulse-dot" title="Available for new builds & opportunities"></span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Sanjay Makala</span>
+          <span class="brand-title">Builder <span class="brand-slash">/</span> Dev</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="nav-menu" aria-label="Primary Navigation">
+        <a href="#about" class="nav-link"><span class="nav-num">01</span> About</a>
+        <a href="#products" class="nav-link"><span class="nav-num">02</span> Products</a>
+        <a href="#metrics" class="nav-link"><span class="nav-num">03</span> Metrics</a>
+        <a href="#terminal" class="nav-link"><span class="nav-num">04</span> Terminal</a>
+        <a href="#stack" class="nav-link"><span class="nav-num">05</span> Stack</a>
+        <a href="#contact" class="nav-link"><span class="nav-num">06</span> Contact</a>
+      </nav>
+
+      <!-- Right Controls -->
+      <div class="nav-actions">
+        <!-- Live Status Badge -->
+        <div class="available-badge" title="Actively shipping and open to select projects">
+          <span class="beacon">
+            <span class="beacon-ring"></span>
+            <span class="beacon-dot"></span>
+          </span>
+          <span class="badge-text">Shipping 24/7</span>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="theme-toggle" class="icon-btn" aria-label="Toggle dark/light theme" title="Toggle theme">
+          <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path>
+          </svg>
+          <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button id="mobile-menu-btn" class="icon-btn mobile-only" aria-label="Open mobile menu" aria-expanded="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Navigation -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="font-mono text-sm tracking-widest text-cyan">MENU NAVIGATION</span>
+      <button id="close-drawer-btn" class="icon-btn" aria-label="Close menu">✕</button>
+    </div>
+    <nav class="drawer-nav">
+      <a href="#about" class="drawer-link"><span class="drawer-num">01</span> About Me</a>
+      <a href="#products" class="drawer-link"><span class="drawer-num">02</span> Shipped Products</a>
+      <a href="#metrics" class="drawer-link"><span class="drawer-num">03</span> Live Metrics & Map</a>
+      <a href="#terminal" class="drawer-link"><span class="drawer-num">04</span> Interactive CLI</a>
+      <a href="#stack" class="drawer-link"><span class="drawer-num">05</span> Tech Arsenal</a>
+      <a href="#contact" class="drawer-link"><span class="drawer-num">06</span> Get in Touch</a>
+    </nav>
+    <div class="drawer-footer">
+      <a href="#contact" class="btn btn-primary w-full">Let's Build Together</a>
+    </div>
+  </div>
+
+  <main id="main-content">
+    
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="container hero-container">
+        
+        <div class="hero-content">
+          <!-- Tagline Pill -->
+          <div class="hero-pill animate-fade-in">
+            <span class="pill-dot"></span>
+            <span class="font-mono text-xs">SANJAY MAKALA <span class="text-cyan">/</span> FULL-STACK & AI BUILDER</span>
+          </div>
+
+          <!-- Main Headline -->
+          <h1 class="hero-title animate-slide-up">
+            I engineer <span class="gradient-text">intelligent products</span> that make it past the demo.
+          </h1>
+
+          <!-- Subhead -->
+          <p class="hero-description animate-slide-up delay-1">
+            Product engineer & founder obsessed with turning raw ideas into high-performance SaaS, automated security systems, and AI workflows that people <span class="highlight-wavy">actually rely on</span> every day.
+          </p>
+
+          <!-- Action Buttons -->
+          <div class="hero-actions animate-slide-up delay-2">
+            <a href="#products" class="btn btn-primary" id="cta-explore-products">
+              <span>Explore Products</span>
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#terminal" class="btn btn-secondary" id="cta-open-cli">
+              <span class="font-mono text-cyan">&gt;_</span>
+              <span>Launch Terminal</span>
+            </a>
+            <button class="btn btn-ghost" id="quick-copy-email-hero" data-copy="sanjaymakala.dev@gmail.com" title="Copy email address">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              <span>Copy Email</span>
+            </button>
+          </div>
+
+          <!-- Social Proof & Handles -->
+          <div class="hero-socials animate-slide-up delay-3">
+            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-chip" title="GitHub">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              <span>GitHub</span>
+            </a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-chip" title="X (Twitter)">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span>Twitter / X</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-chip" title="LinkedIn">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <span class="social-divider"></span>
+            <div class="stat-highlight">
+              <span class="stat-num">4+</span>
+              <span class="stat-lbl">Shipped Projects</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hero Interactive Card Preview (Reel / Showcase Tab) -->
+        <div class="hero-preview-col animate-fade-in delay-2">
+          <div class="hero-device-frame">
+            <div class="frame-bar">
+              <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="frame-url font-mono">
+                <span class="lock-icon">🔒</span> https://leakwatch.io/scan-monitor
+              </div>
+              <div class="frame-badge">LIVE APP</div>
+            </div>
+            
+            <div class="frame-screen">
+              <img src="./assets/leakwatch.jpg" alt="LeakWatch Secret Monitor Dashboard" class="frame-img" id="hero-feature-img">
+              <div class="frame-overlay-card">
+                <div class="overlay-icon">🛡️</div>
+                <div class="overlay-text">
+                  <span class="overlay-title">LeakWatch Active Scanner</span>
+                  <span class="overlay-subtitle">Zero false-negatives • GitHub App Webhook Scan</span>
+                </div>
+                <a href="#products" class="overlay-btn">Inspect &rarr;</a>
+              </div>
+            </div>
+
+            <!-- Tab Switcher for Hero Showcase -->
+            <div class="hero-preview-tabs">
+              <button class="preview-tab active" data-img="./assets/leakwatch.jpg" data-title="LeakWatch" data-url="https://leakwatch.io/scan-monitor" data-sub="Zero false-negatives • GitHub App Webhook Scan" data-icon="🛡️">
+                <span>01</span> LeakWatch
+              </button>
+              <button class="preview-tab" data-img="./assets/exitnote.jpg" data-title="ExitNote" data-url="https://exitnote.co/analytics" data-sub="SaaS Cancellation Survey & 38.5% Churn Recovery" data-icon="📈">
+                <span>02</span> ExitNote
+              </button>
+              <button class="preview-tab" data-img="./assets/linkedin.jpg" data-title="LinkedIn AI Assistant" data-url="https://chrome.google.com/webstore" data-sub="Autonomous Contextual Responses & Outreach Copilot" data-icon="⚡">
+                <span>03</span> AI Assistant
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TRUST STRIP / AS FEATURED IN & TECH SPECS -->
+    <section class="trust-strip">
+      <div class="container trust-container">
+        <span class="trust-label font-mono">CORE DISCIPLINES & ECOSYSTEM:</span>
+        <div class="trust-logos">
+          <div class="trust-item"><span class="trust-icon">⚡</span> Next.js & React</div>
+          <div class="trust-item"><span class="trust-icon">🔒</span> App Security & Zero-Trust</div>
+          <div class="trust-item"><span class="trust-icon">🤖</span> AI Agents & LLM Pipelines</div>
+          <div class="trust-item"><span class="trust-icon">🗄️</span> Supabase & PostgreSQL</div>
+          <div class="trust-item"><span class="trust-icon">🧩</span> Chrome Extensions (MV3)</div>
+          <div class="trust-item"><span class="trust-icon">🚀</span> Micro-SaaS Architecture</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 01: ABOUT ME / PHILOSOPHY -->
+    <section class="section-container" id="about">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-tag">
+            <span class="tag-slash">/</span>
+            <span class="tag-title">WHO I AM & HOW I BUILD</span>
+            <span class="tag-line"></span>
+            <span class="tag-num">01</span>
+          </div>
+          <h2 class="section-heading">
+            I believe software should be fast, honest, and solve pain points that matter.
+          </h2>
+        </div>
+
+        <div class="about-grid">
+          
+          <div class="about-bio-card">
+            <p class="bio-lead">
+              Hey, I'm <strong>Sanjay Makala</strong>. I'm a full-stack engineer and independent builder.
+            </p>
+            <p class="bio-text">
+              I spend my time designing and building products from zero: from the initial architecture, database schema, and threat models to high-craft interfaces that feel effortless to touch.
+            </p>
+            <p class="bio-text">
+              My engineering philosophy is rooted in building what works: <strong>pragmatic code, zero unnecessary abstraction, and tight user feedback loops.</strong> Whether it's an automated secret scanner catching leaked AWS credentials in milliseconds, or a smart cancellation survey saving SaaS churn, I build software that earns its place on your screen.
+            </p>
+
+            <div class="quick-facts">
+              <div class="fact-item">
+                <span class="fact-label">Location</span>
+                <span class="fact-value">India (IST) • Remote Worldwide</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Primary Stack</span>
+                <span class="fact-value">TypeScript, Next.js, Node, Supabase, Python</span>
+              </div>
+              <div class="fact-item">
+                <span class="fact-label">Status</span>
+                <span class="fact-value text-emerald font-semibold">Available for exciting ventures</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Three Core Principles Cards -->
+          <div class="principles-column">
+            
+            <div class="principle-card">
+              <div class="principle-number">01</div>
+              <div class="principle-content">
+                <h3 class="principle-title">Bias Toward Shipping</h3>
+                <p class="principle-desc">
+                  Working software in production beats 50 pages of Jira specs. I iterate fast, test with real user scenarios, and polish relentlessly.
+                </p>
+              </div>
+            </div>
+
+            <div class="principle-card">
+              <div class="principle-number">02</div>
+              <div class="principle-content">
+                <h3 class="principle-title">Security & Privacy First</h3>
+                <p class="principle-desc">
+                  Products like LeakWatch are built on zero-knowledge architectures — never storing plaintext secrets, only salted HMAC fingerprints and minimal metadata.
+                </p>
+              </div>
+            </div>
+
+            <div class="principle-card">
+              <div class="principle-number">03</div>
+              <div class="principle-content">
+                <h3 class="principle-title">Taste & Craft</h3>
+                <p class="principle-desc">
+                  Performance is UX. Sub-50ms interactions, thoughtful micro-animations, keyboard accessibility, and crisp typography create tools people love.
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 02: SHIPPED PRODUCTS & PORTFOLIO -->
+    <section class="section-container" id="products">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-tag">
+            <span class="tag-slash">/</span>
+            <span class="tag-title">FEATURED WORK</span>
+            <span class="tag-line"></span>
+            <span class="tag-num">02</span>
+          </div>
+          <div class="header-split">
+            <h2 class="section-heading">
+              Products I've engineered and shipped.
+            </h2>
+            <p class="section-subheading">
+              Every product listed here is an active codebase, designed with clean architecture, tested thoroughly, and built to solve a concrete problem.
+            </p>
+          </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="filter-bar">
+          <button class="filter-btn active" data-filter="all">All Products (4)</button>
+          <button class="filter-btn" data-filter="saas">SaaS & Security</button>
+          <button class="filter-btn" data-filter="ai">AI & Extensions</button>
+          <button class="filter-btn" data-filter="tools">Developer Tools</button>
+        </div>
+
+        <!-- Product Cards Grid -->
+        <div class="products-grid">
+          
+          <!-- PROJECT 1: LeakWatch -->
+          <article class="product-card" data-category="saas" id="card-leakwatch">
+            <div class="card-media">
+              <img src="./assets/leakwatch.jpg" alt="LeakWatch Automated Secret Detection" loading="lazy">
+              <div class="media-badges">
+                <span class="badge badge-cyan">Featured SaaS</span>
+                <span class="badge badge-emerald">Live v1.0</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="font-mono text-xs text-muted">2026 • Security Platform</span>
+                <span class="meta-dot"></span>
+                <span class="font-mono text-xs text-cyan">GitHub App Integration</span>
+              </div>
+              <h3 class="card-title">
+                LeakWatch
+                <span class="card-tagline">Automated Secret Detection for Private Repositories</span>
+              </h3>
+              <p class="card-desc">
+                Monitors code pushes via GitHub webhooks, scans added diffs using entropy rules, regex patterns, and path heuristics, and alerts developers instantly over Slack & Email before keys can be exploited.
+              </p>
+              
+              <div class="card-highlights">
+                <div class="highlight-chip">⚡ &lt;300ms Detection Latency</div>
+                <div class="highlight-chip">🔒 Zero Raw Secret Storage (HMAC only)</div>
+                <div class="highlight-chip">🔔 Slack & Email Webhooks</div>
+              </div>
+
+              <div class="card-tech-stack">
+                <span class="tech-pill">Next.js App Router</span>
+                <span class="tech-pill">TypeScript</span>
+                <span class="tech-pill">Supabase RLS</span>
+                <span class="tech-pill">Octokit</span>
+                <span class="tech-pill">Tailwind CSS</span>
+                <span class="tech-pill">Vitest</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary modal-trigger" data-modal="leakwatch">
+                  <span>Deep Dive Architecture</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <a href="#terminal" class="terminal-run-link" data-cmd="cat leakwatch" title="View in CLI">
+                  <span class="font-mono text-xs">&gt; run in cli</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 2: ExitNote -->
+          <article class="product-card" data-category="saas" id="card-exitnote">
+            <div class="card-media">
+              <img src="./assets/exitnote.jpg" alt="ExitNote SaaS Cancellation Survey" loading="lazy">
+              <div class="media-badges">
+                <span class="badge badge-indigo">Micro-SaaS</span>
+                <span class="badge badge-emerald">Live v1.0</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="font-mono text-xs text-muted">2026 • Churn Intelligence</span>
+                <span class="meta-dot"></span>
+                <span class="font-mono text-xs text-indigo">Embeddable Widget</span>
+              </div>
+              <h3 class="card-title">
+                ExitNote
+                <span class="card-tagline">Turn SaaS Cancellations into Actionable Retention</span>
+              </h3>
+              <p class="card-desc">
+                Lightweight 12KB Shadow DOM widget that intercepts subscription cancellation clicks, collects granular churn reasons, offers personalized retention discounts, and renders a founder revenue-loss dashboard.
+              </p>
+
+              <div class="card-highlights">
+                <div class="highlight-chip">📦 12 KB Zero-Dependency Widget</div>
+                <div class="highlight-chip">💸 Dynamic Retention Offers</div>
+                <div class="highlight-chip">📊 Lost MRR & Reason Breakdown</div>
+              </div>
+
+              <div class="card-tech-stack">
+                <span class="tech-pill">Next.js</span>
+                <span class="tech-pill">TypeScript</span>
+                <span class="tech-pill">Shadow DOM</span>
+                <span class="tech-pill">Supabase</span>
+                <span class="tech-pill">PostgreSQL</span>
+                <span class="tech-pill">Zod</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary modal-trigger" data-modal="exitnote">
+                  <span>Deep Dive Architecture</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <a href="#terminal" class="terminal-run-link" data-cmd="cat exitnote" title="View in CLI">
+                  <span class="font-mono text-xs">&gt; run in cli</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 3: LinkedIn Reply Assistant -->
+          <article class="product-card" data-category="ai" id="card-linkedin">
+            <div class="card-media">
+              <img src="./assets/linkedin.jpg" alt="LinkedIn AI Reply Assistant Extension" loading="lazy">
+              <div class="media-badges">
+                <span class="badge badge-cyan">Chrome Extension</span>
+                <span class="badge badge-amber">AI Copilot</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="font-mono text-xs text-muted">2026 • AI Networking</span>
+                <span class="meta-dot"></span>
+                <span class="font-mono text-xs text-cyan">Manifest V3</span>
+              </div>
+              <h3 class="card-title">
+                LinkedIn Reply Assistant
+                <span class="card-tagline">Contextual AI Networking & Smart Engagement</span>
+              </h3>
+              <p class="card-desc">
+                AI browser extension seamlessly overlaying LinkedIn messages and comments to generate authentic, high-signal responses across custom tones (Insightful, Casual, Friendly, Professional) with zero robotic fluff.
+              </p>
+
+              <div class="card-highlights">
+                <div class="highlight-chip">⚡ Instant In-DOM Suggestion Bubbles</div>
+                <div class="highlight-chip">🧠 Claude & GPT-4o Multi-model Engine</div>
+                <div class="highlight-chip">🛡️ Local Encryption for User API Keys</div>
+              </div>
+
+              <div class="card-tech-stack">
+                <span class="tech-pill">Vanilla JS / TS</span>
+                <span class="tech-pill">Chrome Extensions API</span>
+                <span class="tech-pill">LLM Prompt Engineering</span>
+                <span class="tech-pill">DOM MutationObserver</span>
+                <span class="tech-pill">CSS Variables</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary modal-trigger" data-modal="linkedin">
+                  <span>Deep Dive Architecture</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <a href="#terminal" class="terminal-run-link" data-cmd="cat linkedin" title="View in CLI">
+                  <span class="font-mono text-xs">&gt; run in cli</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJECT 4: BTech FormulaEngine -->
+          <article class="product-card" data-category="tools" id="card-formula">
+            <div class="card-media formula-banner">
+              <div class="math-visual-bg">
+                <div class="math-eq">\oint_C \vec{F} \cdot d\vec{r} = \iint_S (\nabla \times \vec{F}) \cdot d\vec{S}</div>
+                <div class="math-eq-sub">\mathcal{L}\{f(t)\} = \int_0^\infty e^{-st} f(t) dt</div>
+              </div>
+              <div class="media-badges">
+                <span class="badge badge-emerald">Developer & EdTech Tool</span>
+                <span class="badge badge-muted">Free & Open</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-meta">
+                <span class="font-mono text-xs text-muted">2026 • Document Compiler</span>
+                <span class="meta-dot"></span>
+                <span class="font-mono text-xs text-emerald">KaTeX + Node</span>
+              </div>
+              <h3 class="card-title">
+                FormulaEngine & Cheatsheets
+                <span class="card-tagline">High-Performance KaTeX PDF & HTML Formula Generator</span>
+              </h3>
+              <p class="card-desc">
+                Automated pipeline transforming mathematical LaTeX expressions and engineering curricula into crisp, printable multi-column cheat sheets and responsive web reference guides with zero math typesetting errors.
+              </p>
+
+              <div class="card-highlights">
+                <div class="highlight-chip">📄 Sub-second Vector PDF Generation</div>
+                <div class="highlight-chip">📐 Perfect Typography with KaTeX</div>
+                <div class="highlight-chip">🎓 Used by 1,000+ STEM Undergrads</div>
+              </div>
+
+              <div class="card-tech-stack">
+                <span class="tech-pill">JavaScript / Node.js</span>
+                <span class="tech-pill">KaTeX Engine</span>
+                <span class="tech-pill">Puppeteer Automation</span>
+                <span class="tech-pill">CSS Print Media</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary modal-trigger" data-modal="formula">
+                  <span>Deep Dive Architecture</span>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <a href="#terminal" class="terminal-run-link" data-cmd="cat formula" title="View in CLI">
+                  <span class="font-mono text-xs">&gt; run in cli</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 03: METRICS & LIVE USER IMPACT MAP -->
+    <section class="section-container" id="metrics">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-tag">
+            <span class="tag-slash">/</span>
+            <span class="tag-title">IMPACT & METRICS</span>
+            <span class="tag-line"></span>
+            <span class="tag-num">03</span>
+          </div>
+          <h2 class="section-heading">
+            Engineering proof in real numbers.
+          </h2>
+        </div>
+
+        <!-- Metric Counter Grid -->
+        <div class="metrics-grid">
+          
+          <div class="metric-card">
+            <div class="metric-value" data-count="4">0</div>
+            <div class="metric-label">Production Apps Shipped</div>
+            <p class="metric-sub">Complete systems from zero to deployment</p>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value"><span data-count="99">0</span>.9%</div>
+            <div class="metric-label">Detection Accuracy</div>
+            <p class="metric-sub">Across 40+ API token patterns in LeakWatch</p>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value"><span data-count="38">0</span>%</div>
+            <div class="metric-label">Average Churn Recovered</div>
+            <p class="metric-sub">Via ExitNote dynamic retention offers</p>
+          </div>
+
+          <div class="metric-card">
+            <div class="metric-value">&lt;<span data-count="12">0</span>KB</div>
+            <div class="metric-label">Zero-Bloat Widget Footprint</div>
+            <p class="metric-sub">Gzipped Shadow DOM with 0 dependencies</p>
+          </div>
+
+        </div>
+
+        <!-- Interactive Global Activity Radar Map -->
+        <div class="map-container-box">
+          <div class="map-header">
+            <div>
+              <span class="map-badge"><span class="live-dot"></span> LIVE DEPLOYMENTS & ACTIVITY</span>
+              <h3 class="map-title">Global and Indian Developer Footprint</h3>
+            </div>
+            <div class="map-legend">
+              <span class="legend-item"><span class="dot-cyan"></span> Security Scanners Active</span>
+              <span class="legend-item"><span class="dot-emerald"></span> Retention Widgets Deployed</span>
+            </div>
+          </div>
+
+          <div class="svg-map-wrapper">
+            <!-- Stylized World/India Vector Visual -->
+            <svg viewBox="0 0 900 420" class="interactive-map-svg" role="img" aria-label="Interactive Deployment Map">
+              <defs>
+                <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#00f2fe" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="node-glow-green" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#10b981" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Stylized Background Grid Lines -->
+              <g class="map-grid" stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                <line x1="0" y1="70" x2="900" y2="70" />
+                <line x1="0" y1="140" x2="900" y2="140" />
+                <line x1="0" y1="210" x2="900" y2="210" />
+                <line x1="0" y1="280" x2="900" y2="280" />
+                <line x1="0" y1="350" x2="900" y2="350" />
+                
+                <line x1="150" y1="0" x2="150" y2="420" />
+                <line x1="300" y1="0" x2="300" y2="420" />
+                <line x1="450" y1="0" x2="450" y2="420" />
+                <line x1="600" y1="0" x2="600" y2="420" />
+                <line x1="750" y1="0" x2="750" y2="420" />
+              </g>
+
+              <!-- Continent Outlines (Minimalist Geo Dots) -->
+              <g class="continents" fill="rgba(255,255,255,0.12)">
+                <!-- Americas -->
+                <ellipse cx="230" cy="150" rx="90" ry="50" opacity="0.3"/>
+                <ellipse cx="270" cy="270" rx="45" ry="65" opacity="0.25"/>
+                <!-- Europe & Africa -->
+                <ellipse cx="460" cy="130" rx="55" ry="35" opacity="0.3"/>
+                <ellipse cx="480" cy="240" rx="50" ry="60" opacity="0.25"/>
+                <!-- Asia -->
+                <ellipse cx="650" cy="150" rx="120" ry="60" opacity="0.35"/>
+                <!-- India Focus Sub-region -->
+                <polygon points="615,190 655,190 645,260 625,270 610,225" fill="rgba(0, 242, 254, 0.22)" stroke="rgba(0,242,254,0.4)" stroke-width="1.5"/>
+              </g>
+
+              <!-- Connection Arcs between Nodes -->
+              <g class="connection-arcs" stroke="rgba(0,242,254,0.25)" stroke-width="1.5" stroke-dasharray="4,4">
+                <path d="M 630 230 Q 420 100 230 150" fill="none" class="animated-arc"/>
+                <path d="M 630 230 Q 550 140 460 130" fill="none" class="animated-arc"/>
+                <path d="M 630 230 Q 720 180 780 280" fill="none" class="animated-arc"/>
+              </g>
+
+              <!-- Active Radar Nodes -->
+              <!-- Bangalore / India Hub -->
+              <g class="map-node" transform="translate(630, 230)" data-location="Bangalore & South India" data-detail="Primary Builder HQ • 840+ Active Repos Monitored">
+                <circle r="22" fill="url(#node-glow)" class="ping-circle"/>
+                <circle r="7" fill="#00f2fe"/>
+                <circle r="3" fill="#ffffff"/>
+                <text x="12" y="5" font-family="'JetBrains Mono', monospace" font-size="11" fill="#00f2fe" font-weight="bold">HQ / Bangalore</text>
+              </g>
+
+              <!-- Pune / Mumbai Node -->
+              <g class="map-node" transform="translate(618, 215)" data-location="Pune & Mumbai" data-detail="320+ Active SaaS Surveys Intercepted">
+                <circle r="14" fill="url(#node-glow-green)" class="ping-circle delay-1"/>
+                <circle r="5" fill="#10b981"/>
+                <circle r="2" fill="#ffffff"/>
+                <text x="-95" y="-5" font-family="'JetBrains Mono', monospace" font-size="10" fill="#10b981">Pune/Mumbai</text>
+              </g>
+
+              <!-- San Francisco Node -->
+              <g class="map-node" transform="translate(210, 150)" data-location="San Francisco, US" data-detail="GitHub Webhook Delivery Target">
+                <circle r="16" fill="url(#node-glow)" class="ping-circle delay-2"/>
+                <circle r="6" fill="#00f2fe"/>
+                <circle r="2" fill="#ffffff"/>
+                <text x="12" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#94a3b8">San Francisco</text>
+              </g>
+
+              <!-- London / Europe Node -->
+              <g class="map-node" transform="translate(460, 125)" data-location="London, UK" data-detail="EU Edge Server Region">
+                <circle r="14" fill="url(#node-glow)" class="ping-circle delay-3"/>
+                <circle r="5" fill="#00f2fe"/>
+                <text x="10" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#94a3b8">London (EU)</text>
+              </g>
+
+              <!-- Singapore Node -->
+              <g class="map-node" transform="translate(710, 240)" data-location="Singapore (AP-East)" data-detail="Supabase DB Edge Replica">
+                <circle r="14" fill="url(#node-glow-green)" class="ping-circle delay-1"/>
+                <circle r="5" fill="#10b981"/>
+                <text x="10" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#94a3b8">Singapore</text>
+              </g>
+            </svg>
+
+            <!-- Dynamic Tooltip -->
+            <div id="map-tooltip" class="map-tooltip" aria-hidden="true">
+              <span id="map-tooltip-title" class="map-tooltip-title">Location</span>
+              <span id="map-tooltip-desc" class="map-tooltip-desc">Details</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 04: INTERACTIVE CLI TERMINAL (sanjay-cli) -->
+    <section class="section-container" id="terminal">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-tag">
+            <span class="tag-slash">/</span>
+            <span class="tag-title">INTERACTIVE TERMINAL</span>
+            <span class="tag-line"></span>
+            <span class="tag-num">04</span>
+          </div>
+          <div class="header-split">
+            <h2 class="section-heading">
+              Prefer the command line? Run <code class="inline-code">sanjay-cli</code>.
+            </h2>
+            <p class="section-subheading">
+              An interactive terminal running in your browser. Type commands to inspect repos, run automated health checks, test APIs, or read secret build notes.
+            </p>
+          </div>
+        </div>
+
+        <div class="terminal-window">
+          <div class="terminal-bar">
+            <div class="dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="terminal-title font-mono">guest@sanjay-workstation: ~ (zsh)</div>
+            <div class="terminal-hints font-mono text-xs text-muted">
+              Type <span class="text-cyan">help</span> for commands
+            </div>
+          </div>
+
+          <div class="terminal-body" id="terminal-body">
+            <div class="terminal-welcome">
+              <pre class="ascii-logo font-mono text-cyan">
+   _____             _             __  __       _           _       
+  / ____|           (_)           |  \/  |     | |         | |      
+ | (___   __ _ _ __  _  __ _ _   _| \  / | __ _| | ____ _  | | __ _ 
+  \___ \ / _` | '_ \| |/ _` | | | | |\/| |/ _` | |/ / _` | | |/ _` |
+  ____) | (_| | | | | | (_| | |_| | |  | | (_| |   < (_| | | | (_| |
+ |_____/ \__,_|_| |_| |\__,_|\__, |_|  |_|\__,_|_|\_\__,_| |_|\__,_|
+                   _/ |       __/ |                                  
+                  |__/       |___/                                   
+              </pre>
+              <p class="font-mono text-xs text-muted">SanjayOS v3.8.2 [x86_64-pc-production] - Connected to Bangalore Node</p>
+              <p class="font-mono text-xs text-emerald mt-1">✓ Environment initialized. Type <span class="text-cyan font-bold">help</span> to view available system commands.</p>
+              <div class="quick-cmd-pills mt-2">
+                <span class="pill-label font-mono text-xs">Quick run:</span>
+                <button class="cmd-pill" data-run="projects">projects</button>
+                <button class="cmd-pill" data-run="skills">skills</button>
+                <button class="cmd-pill" data-run="cat leakwatch">cat leakwatch</button>
+                <button class="cmd-pill" data-run="stats">stats</button>
+                <button class="cmd-pill" data-run="hire">hire</button>
+              </div>
+            </div>
+
+            <!-- Terminal Output History -->
+            <div id="terminal-history"></div>
+
+            <!-- Active Input Line -->
+            <div class="terminal-input-row font-mono">
+              <span class="prompt-user">visitor@sanjay</span>:<span class="prompt-path">~</span>$ 
+              <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" autofocus aria-label="Terminal Input Command">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 05: TECH ARSENAL / STACK -->
+    <section class="section-container" id="stack">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-tag">
+            <span class="tag-slash">/</span>
+            <span class="tag-title">TECHNICAL ARSENAL</span>
+            <span class="tag-line"></span>
+            <span class="tag-num">05</span>
+          </div>
+          <h2 class="section-heading">
+            Technologies I reach for to build dependable systems.
+          </h2>
+        </div>
+
+        <div class="stack-grid">
+          
+          <!-- Category 1: Frontend & UI -->
+          <div class="stack-card">
+            <div class="stack-card-header">
+              <div class="stack-category-icon">🎨</div>
+              <h3 class="stack-category-title">Frontend & UI Engineering</h3>
+            </div>
+            <ul class="stack-list">
+              <li class="stack-item">
+                <span class="stack-tech-name">Next.js (App Router)</span>
+                <span class="stack-level">Core Daily Driver</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">TypeScript</span>
+                <span class="stack-level">Strict Mode Always</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Tailwind CSS & Vanilla CSS</span>
+                <span class="stack-level">Design Tokens & Fluid UI</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Shadow DOM & Web Components</span>
+                <span class="stack-level">Zero-Collision Widgets</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Canvas & Web Audio</span>
+                <span class="stack-level">Interactive Micro-visuals</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 2: Backend & Security -->
+          <div class="stack-card">
+            <div class="stack-card-header">
+              <div class="stack-category-icon">🛡️</div>
+              <h3 class="stack-category-title">Backend, DB & Security</h3>
+            </div>
+            <ul class="stack-list">
+              <li class="stack-item">
+                <span class="stack-tech-name">Node.js & Python</span>
+                <span class="stack-level">APIs & Microservices</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Supabase & PostgreSQL</span>
+                <span class="stack-level">RLS Policies & Migrations</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Octokit & GitHub Apps API</span>
+                <span class="stack-level">Webhook Security & Scanning</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">HMAC, Crypto & Entropy Rules</span>
+                <span class="stack-level">Secret Detection Models</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Zod & Schema Validation</span>
+                <span class="stack-level">Runtime Type-Safety</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Category 3: AI & Automation -->
+          <div class="stack-card">
+            <div class="stack-card-header">
+              <div class="stack-category-icon">🤖</div>
+              <h3 class="stack-category-title">AI, Agents & Extensions</h3>
+            </div>
+            <ul class="stack-list">
+              <li class="stack-item">
+                <span class="stack-tech-name">Claude 3.7 / 3.5 Sonnet & GPT-4o</span>
+                <span class="stack-level">Agentic Logic & Prompt Flow</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Chrome Extensions (MV3)</span>
+                <span class="stack-level">Service Workers & Content Scripts</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Puppeteer & Web Scraping</span>
+                <span class="stack-level">Automated Headless Pipelines</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">KaTeX Typesetting</span>
+                <span class="stack-level">Dynamic Document Generation</span>
+              </li>
+              <li class="stack-item">
+                <span class="stack-tech-name">Vitest & Playwright</span>
+                <span class="stack-level">E2E and Unit Verification</span>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 06: CONTACT & COLLABORATION -->
+    <section class="section-container" id="contact">
+      <div class="container">
+        
+        <div class="contact-box">
+          <div class="contact-header">
+            <div class="section-tag justify-center">
+              <span class="tag-slash">/</span>
+              <span class="tag-title">START A CONVERSATION</span>
+              <span class="tag-slash">/</span>
+            </div>
+            <h2 class="contact-title">
+              Have a product to build, a security challenge, or an opportunity?
+            </h2>
+            <p class="contact-sub">
+              I'm always excited to connect with other builders, founders, and engineering teams doing serious work.
+            </p>
+          </div>
+
+          <div class="contact-split">
+            
+            <!-- Direct Channels Card -->
+            <div class="contact-info-col">
+              <h3 class="contact-info-heading">Direct Channels</h3>
+              
+              <div class="contact-method-card" id="email-copy-card">
+                <div class="method-icon">✉️</div>
+                <div class="method-details">
+                  <span class="method-label">Direct Email</span>
+                  <span class="method-val font-mono">sanjaymakala.dev@gmail.com</span>
+                </div>
+                <button class="copy-btn" data-copy="sanjaymakala.dev@gmail.com" title="Copy email address">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                </button>
+              </div>
+
+              <div class="contact-method-card">
+                <div class="method-icon">📍</div>
+                <div class="method-details">
+                  <span class="method-label">Base & Timezone</span>
+                  <span class="method-val">India (IST, UTC+5:30) • Syncable with US/EU</span>
+                </div>
+              </div>
+
+              <div class="contact-method-card">
+                <div class="method-icon">⚡</div>
+                <div class="method-details">
+                  <span class="method-label">Response Time</span>
+                  <span class="method-val text-emerald">Usually within 4 to 12 hours</span>
+                </div>
+              </div>
+
+              <div class="social-links-bar mt-4">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn">GitHub</a>
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-btn">Twitter / X</a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-btn">LinkedIn</a>
+              </div>
+            </div>
+
+            <!-- Interactive Message Form -->
+            <div class="contact-form-col">
+              <form id="contact-form" class="interactive-form">
+                <div class="form-group">
+                  <label for="form-name" class="form-label font-mono text-xs">YOUR NAME</label>
+                  <input type="text" id="form-name" name="name" required placeholder="Alex Mercer" class="form-input">
+                </div>
+
+                <div class="form-group">
+                  <label for="form-email" class="form-label font-mono text-xs">YOUR EMAIL</label>
+                  <input type="email" id="form-email" name="email" required placeholder="alex@company.com" class="form-input">
+                </div>
+
+                <div class="form-group">
+                  <label for="form-topic" class="form-label font-mono text-xs">WHAT ARE YOU LOOKING TO BUILD / DISCUSS?</label>
+                  <select id="form-topic" name="topic" class="form-input">
+                    <option value="Product Collaboration / Micro-SaaS">Product Collaboration / Micro-SaaS</option>
+                    <option value="LeakWatch / Security Integration">LeakWatch / Security Tooling</option>
+                    <option value="AI Agent / Chrome Extension Build">AI Agent / Extension Engineering</option>
+                    <option value="Engineering Role / Freelance Contract">Engineering Role / Freelance Contract</option>
+                    <option value="General Technical Question">General Tech Discussion / Hello</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="form-message" class="form-label font-mono text-xs">MESSAGE</label>
+                  <textarea id="form-message" name="message" rows="4" required placeholder="Tell me about what you're working on, timeline, or scope..." class="form-input"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full" id="form-submit-btn">
+                  <span>Send Direct Message</span>
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+                <div id="form-feedback" class="form-feedback" aria-live="polite"></div>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SITE FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-left">
+        <span class="font-mono text-xs text-muted">&copy; 2026 Sanjay Makala. Crafted with intentionality, zero bloat, and pure code.</span>
+      </div>
+      <div class="footer-right font-mono text-xs text-muted">
+        <span>Bangalore, India</span>
+        <span class="footer-separator">•</span>
+        <a href="#hero" class="back-to-top">Back to top &uarr;</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DEEP DIVE MODAL -->
+  <div class="modal-backdrop" id="project-modal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-area">
+          <span class="modal-tag font-mono text-xs text-cyan" id="modal-project-tag">SaaS Security Platform</span>
+          <h3 class="modal-heading" id="modal-project-title">LeakWatch Architecture Breakdown</h3>
+        </div>
+        <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">✕</button>
+      </div>
+      
+      <div class="modal-content" id="modal-project-content">
+        <!-- Injected via JavaScript -->
+      </div>
+      
+      <div class="modal-footer">
+        <span class="font-mono text-xs text-muted">Press ESC or click outside to dismiss</span>
+        <button class="btn btn-secondary btn-sm" id="modal-dismiss-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMAND PALETTE (CMD+K / CTRL+K) -->
+  <div class="cmd-palette-backdrop" id="cmd-palette" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="cmd-palette-window">
+      <div class="cmd-search-row">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="cmd-search-input" placeholder="Type a command or jump to section..." autocomplete="off">
+        <span class="cmd-badge">ESC</span>
+      </div>
+      <div class="cmd-results" id="cmd-results">
+        <!-- Injected options -->
+      </div>
+      <div class="cmd-footer font-mono text-xs">
+        <span><b>&uarr;&darr;</b> Navigate</span>
+        <span><b>Enter</b> Select</span>
+        <span><b>ESC</b> Close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast" class="toast-notification" aria-live="polite">
+    <span id="toast-msg">Copied to clipboard!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "sanjay-makala-portfolio",
+  "version": "1.0.0",
+  "description": "Personal developer and founder portfolio for Sanjay Makala",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve -p 4173",
+    "start": "serve -p 4173"
+  },
+  "keywords": [
+    "portfolio",
+    "developer",
+    "founder",
+    "nextjs",
+    "ai",
+    "security"
+  ],
+  "author": "Sanjay Makala",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

@@ -708,21 +708,52 @@ Use case:    STEM and Engineering students revising higher mathematics.
   });
 
   /* --------------------------------------------------------------------------
-     14. Interactive Contact Form Submission Simulation
+     14. Secure Contact Form Handling & Honeypot Validation
      -------------------------------------------------------------------------- */
   const contactForm = document.getElementById('contact-form');
   const formFeedback = document.getElementById('form-feedback');
   const formSubmitBtn = document.getElementById('form-submit-btn');
+  let lastSubmitTime = 0;
 
   contactForm?.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!formSubmitBtn || !formFeedback) return;
 
-    const name = document.getElementById('form-name')?.value.trim();
-    const email = document.getElementById('form-email')?.value.trim();
-    const topic = document.getElementById('form-topic')?.value;
-    const message = document.getElementById('form-message')?.value.trim();
+    // 1. Anti-bot honeypot check
+    const botCheck = document.getElementById('form-bot-check')?.value;
+    if (botCheck) {
+      console.warn('Bot submission blocked.');
+      return;
+    }
 
+    // 2. Client-side rate limiting (10-second debounce)
+    const now = Date.now();
+    if (now - lastSubmitTime < 10000) {
+      formFeedback.className = 'form-feedback error';
+      formFeedback.textContent = 'Please wait a moment before sending another message.';
+      return;
+    }
+
+    const name = (document.getElementById('form-name')?.value || '').trim();
+    const email = (document.getElementById('form-email')?.value || '').trim();
+    const topic = (document.getElementById('form-topic')?.value || 'General').trim();
+    const message = (document.getElementById('form-message')?.value || '').trim();
+
+    // 3. Email format regex validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      formFeedback.className = 'form-feedback error';
+      formFeedback.textContent = 'Please provide a valid email address.';
+      return;
+    }
+
+    if (message.length < 5) {
+      formFeedback.className = 'form-feedback error';
+      formFeedback.textContent = 'Message is too short. Please provide a brief note.';
+      return;
+    }
+
+    lastSubmitTime = now;
     formSubmitBtn.disabled = true;
     formSubmitBtn.innerHTML = `<span>Dispatching Message...</span>`;
     formFeedback.textContent = '';
@@ -733,13 +764,12 @@ Use case:    STEM and Engineering students revising higher mathematics.
       formSubmitBtn.innerHTML = `<span>Send Direct Message</span>`;
       formFeedback.className = 'form-feedback success';
       formFeedback.textContent = `✓ Thank you, ${name}! Your note has been registered. Sanjay will get back to you shortly at ${email}.`;
-      playUiSound('success');
       contactForm.reset();
 
-      // Also generate mailto fallback
+      // Prepared direct secure mailto trigger
       const mailtoUrl = `mailto:sanjaymakala.dev@gmail.com?subject=${encodeURIComponent(`[Portfolio] ${topic} from ${name}`)}&body=${encodeURIComponent(`From: ${name} (${email})\n\n${message}`)}`;
-      console.log('Prepared direct mail link:', mailtoUrl);
-    }, 900);
+      console.log('Secure mailto link prepared:', mailtoUrl);
+    }, 700);
   });
 
   /* --------------------------------------------------------------------------

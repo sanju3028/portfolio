@@ -27,6 +27,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Browser Security Directives & Search Indexing -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
+  <meta name="robots" content="index, follow">
   
   <link rel="stylesheet" href="style.css">
   
@@ -998,14 +1003,17 @@
             <!-- Interactive Message Form -->
             <div class="contact-form-col">
               <form id="contact-form" class="interactive-form">
+                <!-- Anti-Spam Bot Honeypot (Invisible to humans) -->
+                <input type="text" id="form-bot-check" name="_gotcha" style="display:none !important" tabindex="-1" autocomplete="off" aria-hidden="true">
+
                 <div class="form-group">
                   <label for="form-name" class="form-label font-mono text-xs">YOUR NAME</label>
-                  <input type="text" id="form-name" name="name" required placeholder="Alex Mercer" class="form-input">
+                  <input type="text" id="form-name" name="name" required maxlength="100" autocomplete="name" placeholder="Alex Mercer" class="form-input">
                 </div>
 
                 <div class="form-group">
                   <label for="form-email" class="form-label font-mono text-xs">YOUR EMAIL</label>
-                  <input type="email" id="form-email" name="email" required placeholder="alex@company.com" class="form-input">
+                  <input type="email" id="form-email" name="email" required maxlength="120" autocomplete="email" placeholder="alex@company.com" class="form-input">
                 </div>
 
                 <div class="form-group">
@@ -1021,7 +1029,7 @@
 
                 <div class="form-group">
                   <label for="form-message" class="form-label font-mono text-xs">MESSAGE</label>
-                  <textarea id="form-message" name="message" rows="4" required placeholder="Tell me about what you're working on, timeline, or scope..." class="form-input"></textarea>
+                  <textarea id="form-message" name="message" rows="4" required maxlength="2500" placeholder="Tell me about what you're working on, timeline, or scope..." class="form-input"></textarea>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-full" id="form-submit-btn">

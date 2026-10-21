@@ -52,17 +52,6 @@
   <!-- Background Interactive Dot Matrix Canvas (Solid dots, Zero Gradients) -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
-  <!-- Sound & Quick Key Indicator (Floating / Accessibility) -->
-  <div class="quick-hud">
-    <button id="sound-toggle" class="hud-pill" aria-label="Toggle sound effects" title="Toggle audio feedback">
-      <span class="hud-icon sound-icon" aria-hidden="true">🔊</span>
-      <span class="hud-label">Audio: <b id="sound-status">ON</b></span>
-    </button>
-    <button id="cmd-k-trigger" class="hud-pill cmd-hint" aria-label="Open Command Palette" title="Press Ctrl+K or Cmd+K">
-      <span class="kbd">⌘K</span>
-      <span class="hud-label">Search</span>
-    </button>
-  </div>
 
   <!-- Header Navigation -->
   <header class="site-header" id="header">
@@ -154,9 +143,20 @@
             <span class="font-mono text-xs">SANJAY MAKALA <span class="text-teal">/</span> SOFTWARE ENGINEER</span>
           </div>
 
-          <!-- Main Headline (Authentic human voice, No Gradients) -->
-          <h1 class="hero-title animate-slide-up">
-            I build software that makes it <span class="solid-accent">past the demo</span>.
+          <!-- Main Headline (Creative Word Reveal & Handcrafted SVG Underline, Pure Solid Color) -->
+          <h1 class="hero-title" aria-label="I build software that makes it past the demo.">
+            <span class="reveal-word" style="--d: 0ms">I</span>
+            <span class="reveal-word" style="--d: 70ms">build</span>
+            <span class="reveal-word" style="--d: 140ms">software</span>
+            <span class="reveal-word" style="--d: 210ms">that</span>
+            <span class="reveal-word" style="--d: 280ms">makes</span>
+            <span class="reveal-word" style="--d: 350ms">it</span>
+            <span class="hero-highlight-phrase">
+              <span class="solid-accent">past the demo</span>
+              <svg class="hand-drawn-underline" viewBox="0 0 250 18" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M 4 11 C 55 4, 115 15, 175 9 C 205 6, 235 12, 246 8" stroke="#14b8a6" stroke-width="3.5" stroke-linecap="round" />
+              </svg>
+            </span>
           </h1>
 
           <!-- Subhead -->
@@ -641,7 +641,7 @@
           </div>
 
           <div class="svg-map-wrapper">
-            <svg viewBox="0 0 900 420" class="interactive-map-svg" role="img" aria-label="Interactive Deployment Map">
+            <svg viewBox="0 0 900 420" class="interactive-map-svg" role="img" aria-label="Interactive Global Deployment Map">
               
               <!-- Clean Background Grid Lines -->
               <g class="map-grid" stroke="rgba(255,255,255,0.06)" stroke-width="1">
@@ -658,68 +658,92 @@
                 <line x1="750" y1="0" x2="750" y2="420" />
               </g>
 
-              <!-- Continent Outlines (Solid Monochrome) -->
-              <g class="continents" fill="rgba(255,255,255,0.08)">
-                <ellipse cx="230" cy="150" rx="90" ry="50"/>
-                <ellipse cx="270" cy="270" rx="45" ry="65"/>
-                <ellipse cx="460" cy="130" rx="55" ry="35"/>
-                <ellipse cx="480" cy="240" rx="50" ry="60"/>
-                <ellipse cx="650" cy="150" rx="120" ry="60"/>
-                <!-- India Sub-region Focus -->
-                <polygon points="615,190 655,190 645,260 625,270 610,225" fill="rgba(20, 184, 166, 0.25)" stroke="#14b8a6" stroke-width="1.5"/>
+              <!-- Stylized Vector Continents (Solid Architectural Grey, No Crude Ellipses) -->
+              <g class="continents" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.12)" stroke-width="1">
+                <!-- North America -->
+                <path d="M 80 85 L 140 70 L 220 65 L 290 85 L 275 125 L 300 160 L 255 175 L 220 185 L 205 210 L 190 235 L 175 220 L 175 185 L 135 155 L 90 120 Z" />
+                <!-- South America -->
+                <path d="M 215 235 L 255 240 L 285 270 L 270 340 L 240 375 L 225 330 L 205 265 Z" />
+                <!-- Europe & UK -->
+                <path d="M 425 80 L 490 75 L 515 105 L 490 140 L 450 145 L 420 125 L 425 90 Z" />
+                <path d="M 418 92 L 434 88 L 430 110 L 416 104 Z" />
+                <!-- Africa -->
+                <path d="M 435 155 L 510 155 L 540 205 L 515 285 L 480 330 L 445 285 L 415 215 L 435 165 Z" />
+                <!-- Asia -->
+                <path d="M 520 75 L 680 70 L 780 105 L 770 170 L 710 175 L 670 155 L 590 155 L 535 115 Z" />
+                <!-- Southeast Asia -->
+                <path d="M 695 215 L 740 220 L 735 240 L 690 230 Z" />
+                <!-- Australia -->
+                <path d="M 720 270 L 800 265 L 820 325 L 755 350 L 715 315 Z" />
+                <!-- India Sub-continent Focus (Solid Teal Tint & Precise Boundary) -->
+                <path d="M 605 170 L 665 170 L 655 215 L 635 275 L 615 220 Z" fill="rgba(20, 184, 166, 0.22)" stroke="#14b8a6" stroke-width="1.6" />
               </g>
 
-              <!-- Connection Arcs between Nodes (Solid stroke) -->
-              <g class="connection-arcs" stroke="rgba(20, 184, 166, 0.35)" stroke-width="1.5" stroke-dasharray="4,4">
-                <path d="M 630 230 Q 420 100 230 150" fill="none" class="animated-arc"/>
-                <path d="M 630 230 Q 550 140 460 130" fill="none" class="animated-arc"/>
-                <path d="M 630 230 Q 720 180 780 280" fill="none" class="animated-arc"/>
+              <!-- Connection Arcs between Nodes (Solid stroke, pointer-events none) -->
+              <g class="connection-arcs" stroke="rgba(20, 184, 166, 0.4)" stroke-width="1.5" stroke-dasharray="5,5" fill="none">
+                <path d="M 635 240 Q 400 60 195 155" class="animated-arc"/>
+                <path d="M 635 240 Q 540 145 445 120" class="animated-arc"/>
+                <path d="M 635 240 Q 675 225 715 235" class="animated-arc"/>
+                <path d="M 635 240 L 620 218" class="animated-arc"/>
               </g>
 
-              <!-- Active Radar Nodes (Solid Fills & Clean Strokes) -->
-              <!-- Bangalore / India Hub -->
-              <g class="map-node" transform="translate(630, 230)" data-location="Bangalore & South India" data-detail="Primary Builder Base • 840+ Active Repos Monitored">
-                <circle r="18" fill="none" stroke="#14b8a6" stroke-width="1.5" class="ping-circle"/>
-                <circle r="6" fill="#14b8a6"/>
-                <circle r="2.5" fill="#ffffff"/>
-                <text x="12" y="5" font-family="'JetBrains Mono', monospace" font-size="11" fill="#14b8a6" font-weight="bold">HQ / Bangalore</text>
+              <!-- Active Radar Nodes (Completely Stable, Zero Scale Jitter) -->
+              <!-- 1. Bangalore / India Hub (Primary Anchor) -->
+              <g class="map-node active" id="node-bangalore" data-location="Bangalore, India (HQ)" data-detail="Primary Builder Base • 840+ Active Repos Monitored" data-latency="12ms" data-status="Primary Hub • Operational" transform="translate(635, 240)">
+                <circle r="22" fill="none" stroke="#14b8a6" stroke-width="1.5" class="ping-circle" pointer-events="none"/>
+                <circle r="18" fill="transparent" class="node-hit-area"/>
+                <circle r="6" fill="#14b8a6" class="node-core"/>
+                <circle r="2" fill="#ffffff" pointer-events="none"/>
+                <text x="14" y="5" font-family="'JetBrains Mono', monospace" font-size="11" fill="#14b8a6" font-weight="700">HQ / Bangalore</text>
               </g>
 
-              <!-- Pune / Mumbai Node -->
-              <g class="map-node" transform="translate(618, 215)" data-location="Pune & Mumbai" data-detail="320+ Active SaaS Surveys Intercepted">
-                <circle r="14" fill="none" stroke="#10b981" stroke-width="1.5" class="ping-circle delay-1"/>
-                <circle r="5" fill="#10b981"/>
-                <circle r="2" fill="#ffffff"/>
+              <!-- 2. Pune / Mumbai Node -->
+              <g class="map-node" id="node-mumbai" data-location="Pune & Mumbai, India" data-detail="320+ Active SaaS Survey & Retention Intercepts" data-latency="18ms" data-status="Active Node • Operational" transform="translate(620, 218)">
+                <circle r="18" fill="transparent" class="node-hit-area"/>
+                <circle r="5" fill="#10b981" class="node-core"/>
+                <circle r="1.8" fill="#ffffff" pointer-events="none"/>
                 <text x="-95" y="-5" font-family="'JetBrains Mono', monospace" font-size="10" fill="#10b981">Pune/Mumbai</text>
               </g>
 
-              <!-- San Francisco Node -->
-              <g class="map-node" transform="translate(210, 150)" data-location="San Francisco, US" data-detail="GitHub Webhook Delivery Target">
-                <circle r="14" fill="none" stroke="#14b8a6" stroke-width="1.5" class="ping-circle delay-2"/>
-                <circle r="5" fill="#14b8a6"/>
-                <circle r="2" fill="#ffffff"/>
+              <!-- 3. San Francisco Node -->
+              <g class="map-node" id="node-sf" data-location="San Francisco, US (Americas Hub)" data-detail="GitHub Webhook Delivery & High-Throughput Ingestion" data-latency="138ms" data-status="Ingestion Target • Operational" transform="translate(195, 155)">
+                <circle r="18" fill="transparent" class="node-hit-area"/>
+                <circle r="5" fill="#14b8a6" class="node-core"/>
+                <circle r="1.8" fill="#ffffff" pointer-events="none"/>
                 <text x="12" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9ca3af">San Francisco</text>
               </g>
 
-              <!-- London / Europe Node -->
-              <g class="map-node" transform="translate(460, 125)" data-location="London, UK" data-detail="EU Edge Server Region">
-                <circle r="12" fill="none" stroke="#14b8a6" stroke-width="1.5" class="ping-circle delay-3"/>
-                <circle r="4.5" fill="#14b8a6"/>
+              <!-- 4. London / Europe Node -->
+              <g class="map-node" id="node-london" data-location="London, UK (EU Edge Region)" data-detail="EU Edge Server Region • Low Latency Verification" data-latency="64ms" data-status="Edge Server • Operational" transform="translate(445, 120)">
+                <circle r="18" fill="transparent" class="node-hit-area"/>
+                <circle r="5" fill="#14b8a6" class="node-core"/>
+                <circle r="1.8" fill="#ffffff" pointer-events="none"/>
                 <text x="10" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9ca3af">London (EU)</text>
               </g>
 
-              <!-- Singapore Node -->
-              <g class="map-node" transform="translate(710, 240)" data-location="Singapore (AP-East)" data-detail="Supabase DB Edge Replica">
-                <circle r="12" fill="none" stroke="#10b981" stroke-width="1.5" class="ping-circle delay-1"/>
-                <circle r="4.5" fill="#10b981"/>
+              <!-- 5. Singapore Node -->
+              <g class="map-node" id="node-singapore" data-location="Singapore (Asia-Pacific East)" data-detail="Supabase Database Edge Read Replica & Storage" data-latency="28ms" data-status="Edge Replica • Operational" transform="translate(715, 235)">
+                <circle r="18" fill="transparent" class="node-hit-area"/>
+                <circle r="5" fill="#10b981" class="node-core"/>
+                <circle r="1.8" fill="#ffffff" pointer-events="none"/>
                 <text x="10" y="4" font-family="'JetBrains Mono', monospace" font-size="10" fill="#9ca3af">Singapore</text>
               </g>
             </svg>
+          </div>
 
-            <!-- Dynamic Tooltip -->
-            <div id="map-tooltip" class="map-tooltip" aria-hidden="true">
-              <span id="map-tooltip-title" class="map-tooltip-title">Location</span>
-              <span id="map-tooltip-desc" class="map-tooltip-desc">Details</span>
+          <!-- Docked Active Node Telemetry Inspector Bar (Stable, Zero Flicker) -->
+          <div class="map-telemetry-bar" id="map-telemetry-bar" aria-live="polite">
+            <div class="telemetry-bar-left">
+              <span class="telemetry-beacon"></span>
+              <span class="telemetry-label">INSPECTING NODE:</span>
+              <span class="telemetry-val" id="telemetry-location">Bangalore, India (HQ)</span>
+            </div>
+            <div class="telemetry-bar-middle">
+              <span class="telemetry-detail-text" id="telemetry-detail">Primary Builder Base • 840+ Active Repos Monitored</span>
+            </div>
+            <div class="telemetry-bar-right">
+              <span class="telemetry-pill-latency" id="telemetry-latency">12ms latency</span>
+              <span class="telemetry-pill-status" id="telemetry-status">ONLINE</span>
             </div>
           </div>
         </div>
@@ -1053,24 +1077,6 @@
     </div>
   </div>
 
-  <!-- COMMAND PALETTE (CMD+K / CTRL+K) -->
-  <div class="cmd-palette-backdrop" id="cmd-palette" aria-hidden="true" role="dialog" aria-modal="true">
-    <div class="cmd-palette-window">
-      <div class="cmd-search-row">
-        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="cmd-search-input" placeholder="Type a command or jump to section..." autocomplete="off">
-        <span class="cmd-badge">ESC</span>
-      </div>
-      <div class="cmd-results" id="cmd-results">
-        <!-- Injected options -->
-      </div>
-      <div class="cmd-footer font-mono text-xs">
-        <span><b>&uarr;&darr;</b> Navigate</span>
-        <span><b>Enter</b> Select</span>
-        <span><b>ESC</b> Close</span>
-      </div>
-    </div>
-  </div>
 
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast" class="toast-notification" aria-live="polite">

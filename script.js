@@ -17,85 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
   'use strict';
 
   /* --------------------------------------------------------------------------
-     1. Sound Synthesis Engine (Web Audio API)
+     1. Sound Synthesis Engine (Disabled per user request)
      -------------------------------------------------------------------------- */
-  let soundEnabled = true;
-  let audioCtx = null;
-
-  function initAudio() {
-    if (!audioCtx) {
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      if (AudioContext) {
-        audioCtx = new AudioContext();
-      }
-    }
-    if (audioCtx && audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
-  }
-
-  function playUiSound(type = 'click') {
-    if (!soundEnabled) return;
-    try {
-      initAudio();
-      if (!audioCtx) return;
-
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-
-      const now = audioCtx.currentTime;
-
-      if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(400, now + 0.04);
-        gain.gain.setValueAtTime(0.06, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
-        osc.start(now);
-        osc.stop(now + 0.04);
-      } else if (type === 'tab') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(480, now);
-        osc.frequency.exponentialRampToValueAtTime(960, now + 0.06);
-        gain.gain.setValueAtTime(0.05, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
-        osc.start(now);
-        osc.stop(now + 0.06);
-      } else if (type === 'terminal') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, now);
-        gain.gain.setValueAtTime(0.03, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-        osc.start(now);
-        osc.stop(now + 0.03);
-      } else if (type === 'success') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now); // C5
-        osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
-        osc.frequency.setValueAtTime(783.99, now + 0.12); // G5
-        gain.gain.setValueAtTime(0.08, now);
-        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-        osc.start(now);
-        osc.stop(now + 0.22);
-      }
-    } catch (e) {
-      // Audio not permitted or supported
-    }
-  }
-
-  // Audio Toggle Button
-  const soundToggleBtn = document.getElementById('sound-toggle');
-  const soundStatusText = document.getElementById('sound-status');
-  if (soundToggleBtn && soundStatusText) {
-    soundToggleBtn.addEventListener('click', () => {
-      soundEnabled = !soundEnabled;
-      soundStatusText.textContent = soundEnabled ? 'ON' : 'OFF';
-      soundToggleBtn.querySelector('.sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
-      showToast(`Audio feedback ${soundEnabled ? 'enabled' : 'muted'}`);
-      if (soundEnabled) playUiSound('click');
-    });
+  function playUiSound() {
+    /* Muted / No sound effects per user request */
   }
 
   /* --------------------------------------------------------------------------
@@ -168,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     5. Interactive Background Canvas (Generative Mesh)
+     5. Ambient Stationary Dot Grid (Calm, Zero Jitter, Zero Flicker)
      -------------------------------------------------------------------------- */
   const canvas = document.getElementById('bg-canvas');
   if (canvas) {
@@ -176,98 +101,64 @@ document.addEventListener('DOMContentLoaded', () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    let particles = [];
-    const particleCount = Math.min(Math.floor((width * height) / 18000), 70);
-
-    let mouse = { x: -1000, y: -1000, active: false };
-
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-      reset() {
-        this.x = Math.random() * width;
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.45;
-        this.vy = (Math.random() - 0.5) * 0.45;
-        this.radius = Math.random() * 1.5 + 0.8;
-      }
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > width) this.vx *= -1;
-        if (this.y < 0 || this.y > height) this.vy *= -1;
-
-        // Subtle reaction to mouse
-        if (mouse.active) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
-            this.x -= (dx / dist) * 0.8;
-            this.y -= (dy / dist) * 0.8;
-          }
-        }
-      }
-      draw() {
-        const isDark = htmlEl.getAttribute('data-theme') === 'dark';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isDark ? 'rgba(20, 184, 166, 0.45)' : 'rgba(13, 148, 136, 0.35)';
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
-    }
-
-    function renderCanvas() {
-      ctx.clearRect(0, 0, width, height);
-      const isDark = htmlEl.getAttribute('data-theme') === 'dark';
-
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 110) {
-            const alpha = (1 - dist / 110) * (isDark ? 0.15 : 0.08);
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = isDark ? `rgba(20, 184, 166, ${alpha})` : `rgba(13, 148, 136, ${alpha})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          }
-        }
-      }
-
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-
-      requestAnimationFrame(renderCanvas);
-    }
+    let mouse = { x: -2000, y: -2000 };
+    const SPACING = 38;
 
     window.addEventListener('resize', () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     });
 
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      mouse.active = true;
-    });
+    // Only track mouse hover on devices that support hover (prevents touch screen jitter)
+    const canHover = window.matchMedia('(hover: hover)').matches;
 
-    window.addEventListener('mouseout', () => {
-      mouse.active = false;
-    });
+    if (canHover) {
+      window.addEventListener('mousemove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        mouse.x = -2000;
+        mouse.y = -2000;
+      });
+    }
+
+    function renderCanvas() {
+      ctx.clearRect(0, 0, width, height);
+      const isDark = htmlEl.getAttribute('data-theme') === 'dark';
+
+      const cols = Math.ceil(width / SPACING);
+      const rows = Math.ceil(height / SPACING);
+
+      for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+          const px = c * SPACING;
+          const py = r * SPACING;
+
+          const dx = mouse.x - px;
+          const dy = mouse.y - py;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          ctx.beginPath();
+          if (dist < 100) {
+            // Calm hover highlight: solid teal dot, slightly enlarged
+            const intensity = 1 - dist / 100;
+            ctx.arc(px, py, 1.2 + intensity * 1.2, 0, Math.PI * 2);
+            ctx.fillStyle = isDark
+              ? `rgba(20, 184, 166, ${0.35 + intensity * 0.45})`
+              : `rgba(13, 148, 136, ${0.3 + intensity * 0.4})`;
+          } else {
+            // Default calm ambient dot (pure stationary grid)
+            ctx.arc(px, py, 1, 0, Math.PI * 2);
+            ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)';
+          }
+          ctx.fill();
+        }
+      }
+
+      requestAnimationFrame(renderCanvas);
+    }
 
     renderCanvas();
   }
@@ -386,40 +277,42 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* --------------------------------------------------------------------------
-     9. Interactive Radar Map Tooltip
+     9. Interactive Telemetry Inspector (Rock Solid, Zero Jitter, Touch-Safe)
      -------------------------------------------------------------------------- */
   const mapNodes = document.querySelectorAll('.map-node');
-  const mapTooltip = document.getElementById('map-tooltip');
-  const mapTooltipTitle = document.getElementById('map-tooltip-title');
-  const mapTooltipDesc = document.getElementById('map-tooltip-desc');
-  const mapWrapper = document.querySelector('.svg-map-wrapper');
+  const telemetryLoc = document.getElementById('telemetry-location');
+  const telemetryDetail = document.getElementById('telemetry-detail');
+  const telemetryLatency = document.getElementById('telemetry-latency');
+  const telemetryStatus = document.getElementById('telemetry-status');
 
-  if (mapWrapper && mapTooltip) {
-    mapNodes.forEach(node => {
-      node.addEventListener('mouseenter', (e) => {
-        playUiSound('click');
-        const loc = node.getAttribute('data-location');
-        const detail = node.getAttribute('data-detail');
+  function selectMapNode(node) {
+    if (!node) return;
+    mapNodes.forEach(n => n.classList.remove('active'));
+    node.classList.add('active');
 
-        mapTooltipTitle.textContent = loc;
-        mapTooltipDesc.textContent = detail;
+    const loc = node.getAttribute('data-location') || 'Node Active';
+    const detail = node.getAttribute('data-detail') || 'Telemetry stream nominal';
+    const latency = node.getAttribute('data-latency') || '<20ms latency';
+    const status = node.getAttribute('data-status') || 'ONLINE';
 
-        const rect = node.getBoundingClientRect();
-        const wrapRect = mapWrapper.getBoundingClientRect();
-
-        const x = rect.left - wrapRect.left + rect.width / 2;
-        const y = rect.top - wrapRect.top;
-
-        mapTooltip.style.left = `${x}px`;
-        mapTooltip.style.top = `${y}px`;
-        mapTooltip.classList.add('visible');
-      });
-
-      node.addEventListener('mouseleave', () => {
-        mapTooltip.classList.remove('visible');
-      });
-    });
+    if (telemetryLoc) telemetryLoc.textContent = loc;
+    if (telemetryDetail) telemetryDetail.textContent = detail;
+    if (telemetryLatency) telemetryLatency.textContent = latency;
+    if (telemetryStatus) telemetryStatus.textContent = status;
   }
+
+  mapNodes.forEach(node => {
+    // Smooth, instant selection on hover, click, or mobile touch
+    node.addEventListener('mouseenter', () => selectMapNode(node));
+    node.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectMapNode(node);
+    });
+    node.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      selectMapNode(node);
+    }, { passive: true });
+  });
 
   /* --------------------------------------------------------------------------
      10. Metric Counter Animations (IntersectionObserver)
@@ -804,100 +697,11 @@ Use case:    STEM and Engineering students revising higher mathematics.
   /* --------------------------------------------------------------------------
      13. Command Palette (Cmd+K / Ctrl+K)
      -------------------------------------------------------------------------- */
-  const cmdPalette = document.getElementById('cmd-palette');
-  const cmdSearchInput = document.getElementById('cmd-search-input');
-  const cmdResults = document.getElementById('cmd-results');
-  const cmdKTrigger = document.getElementById('cmd-k-trigger');
-
-  const PALETTE_ACTIONS = [
-    { title: 'Explore Products', subtitle: 'View all 4 shipped projects', icon: '🚀', action: () => scrollToId('products') },
-    { title: 'Inspect LeakWatch', subtitle: 'Automated secret detection platform', icon: '🛡️', action: () => openModal('leakwatch') },
-    { title: 'Inspect ExitNote', subtitle: 'SaaS churn & cancellation survey', icon: '📈', action: () => openModal('exitnote') },
-    { title: 'Inspect LinkedIn AI', subtitle: 'Smart contextual AI extension', icon: '⚡', action: () => openModal('linkedin') },
-    { title: 'Open Interactive CLI', subtitle: 'Run sanjay-cli in terminal', icon: '💻', action: () => { scrollToId('terminal'); terminalInput?.focus(); } },
-    { title: 'Toggle Theme', subtitle: 'Switch dark/light mode', icon: '🌗', action: () => themeToggleBtn?.click() },
-    { title: 'Copy Email Address', subtitle: 'sanjaymakala.dev@gmail.com', icon: '✉️', action: () => fallbackCopy('sanjaymakala.dev@gmail.com') },
-    { title: 'View Tech Arsenal', subtitle: 'Languages, frameworks, security', icon: '🛠️', action: () => scrollToId('stack') },
-    { title: 'Contact Sanjay', subtitle: 'Send a message or hire', icon: '💬', action: () => scrollToId('contact') }
-  ];
-
-  function scrollToId(id) {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-  }
-
-  function renderPaletteResults(filter = '') {
-    if (!cmdResults) return;
-    cmdResults.innerHTML = '';
-
-    const q = filter.toLowerCase().trim();
-    const filtered = PALETTE_ACTIONS.filter(item => 
-      item.title.toLowerCase().includes(q) || item.subtitle.toLowerCase().includes(q)
-    );
-
-    if (filtered.length === 0) {
-      cmdResults.innerHTML = `<div class="font-mono text-xs text-muted p-4 text-center">No matching commands found.</div>`;
-      return;
-    }
-
-    filtered.forEach((item, idx) => {
-      const el = document.createElement('div');
-      el.className = `cmd-item ${idx === 0 ? 'selected' : ''}`;
-      el.innerHTML = `
-        <div class="cmd-item-left">
-          <span class="cmd-item-icon">${item.icon}</span>
-          <div>
-            <div class="cmd-item-title">${item.title}</div>
-            <div class="font-mono text-xs text-muted">${item.subtitle}</div>
-          </div>
-        </div>
-        <span class="cmd-item-shortcut">Enter</span>
-      `;
-      el.addEventListener('click', () => {
-        item.action();
-        closePalette();
-      });
-      cmdResults.appendChild(el);
-    });
-  }
-
-  function openPalette() {
-    if (!cmdPalette) return;
-    cmdPalette.classList.add('open');
-    cmdPalette.setAttribute('aria-hidden', 'false');
-    if (cmdSearchInput) {
-      cmdSearchInput.value = '';
-      cmdSearchInput.focus();
-    }
-    renderPaletteResults('');
-    playUiSound('tab');
-  }
-
-  function closePalette() {
-    if (!cmdPalette) return;
-    cmdPalette.classList.remove('open');
-    cmdPalette.setAttribute('aria-hidden', 'true');
-    playUiSound('click');
-  }
-
-  cmdKTrigger?.addEventListener('click', openPalette);
-  cmdPalette?.addEventListener('click', (e) => {
-    if (e.target === cmdPalette) closePalette();
-  });
-
-  cmdSearchInput?.addEventListener('input', (e) => {
-    renderPaletteResults(e.target.value);
-  });
-
+  /* --------------------------------------------------------------------------
+     13. Keyboard Accessibility & Modals
+     -------------------------------------------------------------------------- */
   window.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      if (cmdPalette?.classList.contains('open')) {
-        closePalette();
-      } else {
-        openPalette();
-      }
-    } else if (e.key === 'Escape') {
-      if (cmdPalette?.classList.contains('open')) closePalette();
+    if (e.key === 'Escape') {
       if (projectModal?.classList.contains('open')) closeModal();
       if (mobileDrawer?.classList.contains('open')) toggleDrawer(false);
     }

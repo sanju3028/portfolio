@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isDark = htmlEl.getAttribute('data-theme') === 'dark';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = isDark ? 'rgba(0, 242, 254, 0.45)' : 'rgba(2, 132, 199, 0.35)';
+        ctx.fillStyle = isDark ? 'rgba(20, 184, 166, 0.45)' : 'rgba(13, 148, 136, 0.35)';
         ctx.fill();
       }
     }
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = isDark ? `rgba(0, 242, 254, ${alpha})` : `rgba(2, 132, 199, ${alpha})`;
+            ctx.strokeStyle = isDark ? `rgba(20, 184, 166, ${alpha})` : `rgba(13, 148, 136, ${alpha})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
